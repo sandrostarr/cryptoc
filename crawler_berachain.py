@@ -56,3 +56,28 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
 
     element = wait.until(EC.presence_of_element_located((By.XPATH, element_selector)))
     element.send_keys(input_text)
+
+
+# FAUCET START ########################################################################################################
+
+# popup checkbox
+selector = "//*[@id='terms']"
+click_element(selector)
+
+# popup button
+selector = "/html/body/div[1]/div[2]/div[2]/div[5]/button[1]"
+click_element(selector)
+
+# captcha
+# selector = "/html/body/div/div/div[1]/div/label/input"
+# click_element(selector)
+
+# wallet address
+selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[2]/div[2]/div/input"
+send_keys_to_element(selector, os.getenv('WALLET'))
+
+# drip tokens
+selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[3]/button"
+click_element(selector)
+
+# FAUCET END ##########################################################################################################
