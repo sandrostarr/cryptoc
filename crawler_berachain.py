@@ -63,7 +63,7 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
 # popup checkbox
 selector = "//*[@id='terms']"
 click_element(selector)
-
+print('shalom')
 # popup button
 selector = "/html/body/div[1]/div[2]/div[2]/div[5]/button[1]"
 click_element(selector)
