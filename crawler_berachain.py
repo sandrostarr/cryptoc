@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 # путь к профайлу пользователя файрфокса для открытия окна браузера с установленным расширением Metamask
 firefox_profile_directory = os.getenv('FIREFOX_PROFILE_DIRECTORY')
@@ -18,13 +19,35 @@ metamask_pw = os.getenv('METAMASK_PW')
 
 profile = webdriver.FirefoxProfile(profile_directory=firefox_profile_directory)
 
+#proxy vars
+proxy_host = "88.209.207.119"
+proxy_port = "50100"
+proxy_username = "Dropup"
+proxy_password = "HJEhLSI9Cr"
+
+#сощдание обьекта прокси
+proxy = Proxy()
+proxy.proxyType = ProxyType.MANUAL
+proxy.http_proxy = f"{proxy_username}:{proxy_password}@{proxy_host}:{proxy_port}"
+proxy.ssl_proxy = f"{proxy_username}:{proxy_password}@{proxy_host}:{proxy_port}"
+
+#настройки профиля proxy
+profile.set_preference("network.proxy.type", 1)
+profile.set_preference("network.proxy.http", proxy_host)
+profile.set_preference("network.proxy.http_port", int(proxy_port))
+profile.set_preference("network.proxy.ssl", proxy_host)
+profile.set_preference("network.proxy.ssl_port", int(proxy_port))
+profile.set_preference("network.proxy.no_proxies_on", "")
+
 # настройка и подключение профайла пользователя файрфокса в веб-драйвер
 options = webdriver.FirefoxOptions()
+
 
 # фоновый запуск браузера в headless-режиме
 # options.add_argument("--headless")
 
 options.profile = profile
+
 
 driver = webdriver.Firefox(options=options)
 
