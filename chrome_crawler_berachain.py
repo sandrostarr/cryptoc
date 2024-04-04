@@ -2,8 +2,10 @@ import os
 import time
 import zipfile
 
+from typing import ClassVar
 from dotenv import load_dotenv
 from selenium import webdriver
+from fake_useragent import UserAgent
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -12,8 +14,10 @@ from selenium.webdriver.support import expected_conditions as ec
 load_dotenv()
 
 url = os.getenv('URL')
+# url = 'https://www.whatsmyua.info'
+# url = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
 metamask_pw = os.getenv('METAMASK_PW')
-wait = None
+wait: ClassVar[WebDriverWait]
 
 # создание экстеншна для прокси. TODO вынести в отдельный файл
 manifest_json = """
@@ -70,6 +74,7 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     # создание экземпляра настроек хрома
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
+    options.add_argument("--disable-blink-features=AutomationControlled")
 
     options.add_extension('extensions/Rabby-Wallet.crx')
 
@@ -136,7 +141,9 @@ def get_test_tokens_from_faucet():
 
 
 def main():
-    driver = get_chromedriver(use_proxy=True)
+    # генерация фейкового юзерагента
+    useragent = UserAgent().getRandom
+    driver = get_chromedriver(use_proxy=True, user_agent=useragent)
 
     # явное ожидание поиска элементов
     global wait
@@ -151,4 +158,5 @@ def main():
 if __name__ == '__main__':
     main()
 
+    # временный костыль для дебага
     time.sleep(300)
