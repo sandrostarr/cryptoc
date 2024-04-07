@@ -1,5 +1,6 @@
 import os
 import time
+import pickle
 import zipfile
 
 from typing import ClassVar
@@ -14,10 +15,11 @@ from selenium.webdriver.support import expected_conditions as ec
 load_dotenv()
 
 url = os.getenv('URL')
-# url = 'https://www.whatsmyua.info'
-# url = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
+
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
+
+cookies = 'cookies.dat'
 
 # создание экстеншна для прокси. TODO вынести в отдельный файл
 manifest_json = """
@@ -77,6 +79,7 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     options.add_argument("--disable-blink-features=AutomationControlled")
 
     options.add_extension('extensions/Rabby-Wallet.crx')
+    # options.add_extension('extensions/MetaMask.crx')
 
     if use_proxy:
         plugin_file = 'proxy_auth_plugin.zip'
@@ -129,7 +132,7 @@ def get_test_tokens_from_faucet():
 
     # captcha
     selector = '/html/body/div/div/div[1]/div/label/input'
-    try_click_element_and_continue(selector)
+    try_click_element_and_continue(selector, 5)
 
     # wallet address
     selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[2]/div[2]/div/input"
@@ -153,6 +156,11 @@ def main():
     driver.get(url)
 
     get_test_tokens_from_faucet()
+
+    # читаем cookies из файла
+    with open(cookies, 'rb') as f:
+        for cookie in pickle.load(f):
+            driver.add_cookie(cookie)
 
 
 if __name__ == '__main__':
