@@ -2,10 +2,13 @@ import os
 import time
 import pickle
 import zipfile
+import pyautogui
+import undetected_chromedriver as uc
 
 from typing import ClassVar
 from dotenv import load_dotenv
 from selenium import webdriver
+
 from fake_useragent import UserAgent
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
@@ -14,7 +17,8 @@ from selenium.webdriver.support import expected_conditions as ec
 
 load_dotenv()
 
-url = os.getenv('URL')
+# url = os.getenv('URL') TODO вынести berachain в отдельный скрипт
+url = os.getenv('URL_LAYER3')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -78,8 +82,10 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     options.add_argument("--start-maximized")
     options.add_argument("--disable-blink-features=AutomationControlled")
 
-    options.add_extension('extensions/Rabby-Wallet.crx')
+    # options.add_extension('extensions/Rabby-Wallet.crx')
     # options.add_extension('extensions/MetaMask.crx')
+    # options.add_argument('--load-extension=extensions/MetaMask')
+    options.add_argument('--load-extension=extensions/Rabby-Wallet')
 
     if use_proxy:
         plugin_file = 'proxy_auth_plugin.zip'
@@ -91,7 +97,10 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     if user_agent:
         options.add_argument('--user-agent=%s' % user_agent)
 
-    driver = webdriver.Chrome(options=options)
+    # обычный драйвер
+    # driver = webdriver.Chrome(options=options)
+    # undetected_chromedriver (для того, чтобы cloudflare не палил нас)
+    driver = uc.Chrome(options=options)
     return driver
 
 
@@ -120,7 +129,94 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
     element.send_keys(input_text)
 
 
+# функция для логина в rabby wallet
+def rabby_wallet_login(driver):
+    # клики на расширениях для использования
+    # TODO надо использовать через url расширения и убрать клики
+    # open extensions
+    pyautogui.click(1580, 100)
+    # click rabby
+    pyautogui.click(1400, 270)
+
+    # переключение на rabby
+    driver.switch_to.window(driver.window_handles[2])
+
+    # click next
+    selector = '//*[@id="root"]/div/section/footer/button'
+    click_element(selector)
+
+    # click get ready
+    selector = '//*[@id="root"]/div/section/footer/a/button'
+    click_element(selector)
+
+    # import private key
+    selector = '//*[@id="root"]/div/div[3]/div[2]/div[2]'
+    click_element(selector)
+
+    # create pass
+    selector = '//*[@id="password"]'
+    send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
+
+    # confirm pass
+    selector = '//*[@id="confirmPassword"]'
+    send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
+
+    # click next button
+    selector = '//*[@id="root"]/div/div/div/form/div[3]/button'
+    click_element(selector)
+
+    # send private key
+    selector = '//*[@id="key"]'
+    send_keys_to_element(selector, os.getenv('PRIVATE_KEY'))
+
+    # click next button
+    selector = '//*[@id="root"]/div/div/div/div/div/form/div[3]/div/button'
+    try_click_element_and_continue(selector)
+
+    # click done button
+    selector = '//*[@id="root"]/div/div/div/div/div/form/div[2]/div/button'
+    try_click_element_and_continue(selector)
+
+    # click done button
+    selector = '/html/body/div[2]/div/div[2]/div/div[2]/button'
+    try_click_element_and_continue(selector)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+    # это настройка расширения rabby без клика по экрану. В undetected_chromedriver почему-то не работает
+    # TODO пофиксить и использовать вместо кликов
+    # # open extension create password page
+    # driver.get("chrome-extension://acmacodkjbdgmoleebolmdjonilkdbch/index.html#/password")
+    #
+    # time.sleep(1)
+    # driver.refresh()
+    #
+    # # create pass
+    # selector = '//*[@id="password"]'
+    # send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
+    #
+    # # confirm pass
+    # selector = '//*[@id="confirmPassword"]'
+    # send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
+    #
+    # # click next button
+    # selector = '//*[@id="root"]/div/div/div/form/div[3]/button'
+    # click_element(selector)
+    #
+    # # open extension import key page
+    # driver.get("chrome-extension://acmacodkjbdgmoleebolmdjonilkdbch/index.html#/import/key")
+    #
+    # # send private key
+    # selector = '//*[@id="key"]'
+    # send_keys_to_element(selector, os.getenv('PRIVATE_KEY'))
+    #
+    # # click next button
+    # selector = '//*[@id="root"]/div/form/div[3]/div/button'
+    # try_click_element_and_continue(selector)
+
+
 # функция для получения тестовых токенов
+# TODO вынести в отдельный скрипт
 def get_test_tokens_from_faucet():
     # popup checkbox
     selector = "//*[@id='terms']"
@@ -143,24 +239,77 @@ def get_test_tokens_from_faucet():
     click_element(selector)
 
 
+# функция для выполнения первого квеста в layer3
+def layer3_quest_intro_to_cube(driver):
+    driver.get(url)
+
+    # connect wallet
+    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
+    click_element(selector)
+
+    # rabby wallet
+    selector = '//*[@id="radix-:rc:-content-evm"]/div/button[1]'
+    click_element(selector, 1)
+
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    # rabby wallet click connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+    # log in to start
+    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
+    click_element(selector)
+
+    # rabby wallet
+    selector = '//*[@id="radix-:ri:-content-evm"]/div/button[1]'
+    click_element(selector, 2)
+
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    # rabby wallet click sign and create
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+
+    # rabby wallet click confirm
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+    time.sleep(3)
+
+    # click captcha
+    pyautogui.click(740, 593)
+
+
 def main():
     # генерация фейкового юзерагента
     useragent = UserAgent().getRandom
-    driver = get_chromedriver(use_proxy=True, user_agent=useragent)
+    driver = get_chromedriver(use_proxy=False, user_agent=None)
 
     # явное ожидание поиска элементов
     global wait
     wait = WebDriverWait(driver, timeout=5)
 
-    # переход по ссылке
-    driver.get(url)
+    # функция для получения тестовых токенов
+    # TODO вынести в отдельный скрипт
+    # get_test_tokens_from_faucet()
 
-    get_test_tokens_from_faucet()
+    rabby_wallet_login(driver)
 
-    # читаем cookies из файла
-    with open(cookies, 'rb') as f:
-        for cookie in pickle.load(f):
-            driver.add_cookie(cookie)
+    layer3_quest_intro_to_cube(driver)
+
+    # # читаем cookies из файла
+    # with open(cookies, 'rb') as f:
+    #     for cookie in pickle.load(f):
+    #         driver.add_cookie(cookie)
 
 
 if __name__ == '__main__':
