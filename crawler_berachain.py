@@ -14,8 +14,6 @@ load_dotenv()
 firefox_profile_directory = os.getenv('FIREFOX_PROFILE_DIRECTORY')
 
 url = os.getenv('URL')
-url2 = 'https://layer3.xyz/quests/intro-to-cubes'
-
 metamask_pw = os.getenv('METAMASK_PW')
 
 profile = webdriver.FirefoxProfile(profile_directory=firefox_profile_directory)
@@ -99,37 +97,8 @@ def get_test_tokens_from_faucet():
     click_element(selector)
 
 
-# функция для получения тестовых токенов
-def layer3_quest_intro_to_cube():
-    # popup checkbox
-    selector = "//*[@id='terms']"
-    try_click_element_and_continue(selector)
-
-    # popup button
-    selector = "/html/body/div[1]/div[2]/div[2]/div[5]/button[1]"
-    try_click_element_and_continue(selector)
-
-    # captcha
-    selector = "/html/body/div/div/div[1]/div/label/input"
-    try_click_element_and_continue(selector)
-
-    # wallet address
-    selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[2]/div[2]/div/input"
-    send_keys_to_element(selector, os.getenv('WALLET'))
-
-    # drip tokens
-    selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[3]/button"
-    click_element(selector)
-
-
 # FAUCET START ########################################################################################################
 
-# get_test_tokens_from_faucet()
+get_test_tokens_from_faucet()
 
 # FAUCET END ##########################################################################################################
-
-# LAYER 3 QUEST 1 START ###############################################################################################
-
-# layer3_quest_intro_to_cube()
-
-# LAYER 3 QUEST 1 END #################################################################################################
