@@ -15,10 +15,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
+import layer3_quests as lq
+
 load_dotenv()
 
 # url = os.getenv('URL') TODO вынести berachain в отдельный скрипт
-url = os.getenv('URL_LAYER3')
+url_quest_1 = os.getenv('URL_QUEST_1')
+url_quest_15 = os.getenv('URL_QUEST_15')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -133,10 +136,13 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
 def rabby_wallet_login(driver):
     # клики на расширениях для использования
     # TODO надо использовать через url расширения и убрать клики
+
+    time.sleep(3)
+
     # open extensions
-    pyautogui.click(1580, 100)
+    pyautogui.click(1545, 100)
     # click rabby
-    pyautogui.click(1400, 270)
+    pyautogui.click(1350, 270)
 
     # переключение на rabby
     driver.switch_to.window(driver.window_handles[2])
@@ -241,7 +247,7 @@ def get_test_tokens_from_faucet():
 
 # функция для выполнения первого квеста в layer3
 def layer3_connect_wallet_and_login(driver):
-    driver.get(url)
+    driver.get(url_quest_1)
 
     # connect wallet
     selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
@@ -289,10 +295,22 @@ def layer3_connect_wallet_and_login(driver):
     pyautogui.click(740, 593)
 
 
-# функция для выполнения первого квеста в layer3
-def layer3_quest_intro_to_cube(driver):
+def layer3_quest_1_intro_to_cube():
     # click introducing cubes
     selector = '//*[@id="__next"]/div/div/div[3]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
+
+    # click continue (x9)
+    for x in range(0, 9):
+        selector = '//*[@id="radix-:rq:"]/div/div[3]/div/div/div/button'
+        click_element(selector)
+
+
+def layer3_quest_15_intro_to_paragraph(driver):
+    driver.get(url_quest_15)
+
+    # click introducing cubes
+    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
     click_element(selector)
 
     # click continue (x9)
@@ -318,7 +336,9 @@ def main():
 
     layer3_connect_wallet_and_login(driver)
 
-    layer3_quest_intro_to_cube(driver)
+    layer3_quest_1_intro_to_cube()
+
+    layer3_quest_15_intro_to_paragraph(driver)
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
