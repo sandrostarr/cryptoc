@@ -15,8 +15,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-import layer3_quests as lq
-
 load_dotenv()
 
 # url = os.getenv('URL') TODO вынести berachain в отдельный скрипт
@@ -134,15 +132,31 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
 
 # функция для логина в rabby wallet
 def rabby_wallet_login(driver):
+
+    time.sleep(5)
     # клики на расширениях для использования
     # TODO надо использовать через url расширения и убрать клики
-
-    time.sleep(3)
-
     # open extensions
-    pyautogui.click(1545, 100)
+    ext_location = pyautogui.locateOnScreen('IMG/extense.png')
+    print(ext_location)
+    ext_locationX = ext_location.left / 2 + ext_location.width / 4
+    ext_locationY = ext_location.top / 2 + ext_location.height / 4
+    pyautogui.moveTo(ext_locationX, ext_locationY)
+    pyautogui.click(button='left')
+
+    time.sleep(0.1)
+
+
+    #pyautogui.click(1580, 100)
     # click rabby
-    pyautogui.click(1350, 270)
+    rabby_location = pyautogui.locateOnScreen('IMG/rabbi_wall.png')
+    print(ext_location)
+    rabby_locationX = rabby_location.left / 2 + rabby_location.width / 4
+    rabby_locationY = rabby_location.top / 2 + rabby_location.height / 4
+    pyautogui.moveTo(rabby_locationX, rabby_locationY)
+    pyautogui.click(button='left')
+
+    #pyautogui.click(1400, 270)
 
     # переключение на rabby
     driver.switch_to.window(driver.window_handles[2])
@@ -223,30 +237,30 @@ def rabby_wallet_login(driver):
 
 # функция для получения тестовых токенов
 # TODO вынести в отдельный скрипт
-def get_test_tokens_from_faucet():
-    # popup checkbox
-    selector = "//*[@id='terms']"
-    try_click_element_and_continue(selector)
-
-    # popup button
-    selector = "/html/body/div[1]/div[2]/div[2]/div[5]/button[1]"
-    try_click_element_and_continue(selector)
-
-    # captcha
-    selector = '/html/body/div/div/div[1]/div/label/input'
-    try_click_element_and_continue(selector, 5)
-
-    # wallet address
-    selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[2]/div[2]/div/input"
-    send_keys_to_element(selector, os.getenv('WALLET'))
-
-    # drip tokens
-    selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[3]/button"
-    click_element(selector)
+# def get_test_tokens_from_faucet():
+#     # popup checkbox
+#     selector = "//*[@id='terms']"
+#     try_click_element_and_continue(selector)
+#
+#     # popup button
+#     selector = "/html/body/div[1]/div[2]/div[2]/div[5]/button[1]"
+#     try_click_element_and_continue(selector)
+#
+#     # captcha
+#     selector = '/html/body/div/div/div[1]/div/label/input'
+#     try_click_element_and_continue(selector, 5)
+#
+#     # wallet address
+#     selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[2]/div[2]/div/input"
+#     send_keys_to_element(selector, os.getenv('WALLET'))
+#
+#     # drip tokens
+#     selector = "/html/body/div/div[2]/main/div/div[1]/div[1]/div[3]/button"
+#     click_element(selector)
 
 
 # функция для выполнения первого квеста в layer3
-def layer3_connect_wallet_and_login(driver):
+def layer3_quest_intro_to_cube(driver):
     driver.get(url_quest_1)
 
     # connect wallet
@@ -294,29 +308,60 @@ def layer3_connect_wallet_and_login(driver):
     # click captcha
     pyautogui.click(740, 593)
 
-
-def layer3_quest_1_intro_to_cube():
-    # click introducing cubes
-    selector = '//*[@id="__next"]/div/div/div[3]/div/div[2]/div[2]/div[1]'
-    click_element(selector)
-
-    # click continue (x9)
-    for x in range(0, 9):
-        selector = '//*[@id="radix-:rq:"]/div/div[3]/div/div/div/button'
-        click_element(selector)
-
-
-def layer3_quest_15_intro_to_paragraph(driver):
+def layer3_quest_15(driver):
     driver.get(url_quest_15)
-
-    # click introducing cubes
-    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
+    print(driver.window_handles)
+    #начало задания
+    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[2]/button'
     click_element(selector)
 
-    # click continue (x9)
-    for x in range(0, 9):
-        selector = '//*[@id="radix-:rq:"]/div/div[3]/div/div/div/button'
-        click_element(selector)
+    #1 часть
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    click_element(selector)
+
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    click_element(selector)
+
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    click_element(selector)
+
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    click_element(selector)
+
+    #часть 2
+    selector = '//*[@id="radix-:ra:"]/div/div[2]/div[2]/div/div/div/a/button'
+    click_element(selector)
+
+    #переход на параграф
+    driver.switch_to.window(driver.window_handles[2])
+
+    selector = '//*[@id="headlessui-dialog-panel-:r1:"]/div[2]/div/div[2]/div/span'
+    click_element(selector)
+
+    selector = '//*[@id="para-document"]/div/div/div[1]/div[1]/a/div/div/div[1]/img'
+    click_element(selector)
+
+    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[3]/div[1]/button'
+    click_element(selector)
+
+    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div/div[1]/div/div/button'
+    click_element(selector)
+
+    selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button/div/div'
+    click_element(selector)
+
+    print(driver.window_handles)
+    #переключение на рабби
+    print("00")
+    driver.switch_to.window(driver.window_handles[1])
+    print("01")
+
+    #коннект в рабби
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+    print("02")
+
+    time.sleep(10)
 
 
 def main():
@@ -334,11 +379,10 @@ def main():
 
     rabby_wallet_login(driver)
 
-    layer3_connect_wallet_and_login(driver)
+    layer3_quest_intro_to_cube(driver)
+    layer3_quest_15(driver)
 
-    layer3_quest_1_intro_to_cube()
 
-    layer3_quest_15_intro_to_paragraph(driver)
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
