@@ -240,7 +240,7 @@ def get_test_tokens_from_faucet():
 
 
 # функция для выполнения первого квеста в layer3
-def layer3_quest_intro_to_cube(driver):
+def layer3_connect_wallet_and_login(driver):
     driver.get(url)
 
     # connect wallet
@@ -289,6 +289,18 @@ def layer3_quest_intro_to_cube(driver):
     pyautogui.click(740, 593)
 
 
+# функция для выполнения первого квеста в layer3
+def layer3_quest_intro_to_cube(driver):
+    # click introducing cubes
+    selector = '//*[@id="__next"]/div/div/div[3]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
+
+    # click continue (x9)
+    for x in range(0, 9):
+        selector = '//*[@id="radix-:rq:"]/div/div[3]/div/div/div/button'
+        click_element(selector)
+
+
 def main():
     # генерация фейкового юзерагента
     useragent = UserAgent().getRandom
@@ -303,6 +315,8 @@ def main():
     # get_test_tokens_from_faucet()
 
     rabby_wallet_login(driver)
+
+    layer3_connect_wallet_and_login(driver)
 
     layer3_quest_intro_to_cube(driver)
 
