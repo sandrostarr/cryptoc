@@ -350,12 +350,12 @@ def layer3_quest_15(driver):
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button/div/div'
     click_element(selector)
 
-    print(driver.window_handles)
+
     #переключение на рабби
     print("00")
-    driver.switch_to.window(driver.window_handles[1])
+    driver.switch_to.window(driver.window_handles[2])
     print("01")
-
+    print(driver.window_handles)
     #коннект в рабби
     selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
     click_element(selector)
