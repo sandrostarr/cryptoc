@@ -146,8 +146,8 @@ def rabby_wallet_login(driver):
 
     time.sleep(0.1)
 
+    # pyautogui.click(1580, 100)
 
-    #pyautogui.click(1580, 100)
     # click rabby
     rabby_location = pyautogui.locateOnScreen('IMG/rabbi_wall.png')
     print(ext_location)
@@ -156,7 +156,7 @@ def rabby_wallet_login(driver):
     pyautogui.moveTo(rabby_locationX, rabby_locationY)
     pyautogui.click(button='left')
 
-    #pyautogui.click(1400, 270)
+    # pyautogui.click(1400, 270)
 
     # переключение на rabby
     driver.switch_to.window(driver.window_handles[2])
@@ -260,7 +260,7 @@ def rabby_wallet_login(driver):
 
 
 # функция для выполнения первого квеста в layer3
-def layer3_quest_intro_to_cube(driver):
+def layer3_connect_wallet_and_login(driver):
     driver.get(url_quest_1)
 
     # connect wallet
@@ -308,10 +308,11 @@ def layer3_quest_intro_to_cube(driver):
     # click captcha
     pyautogui.click(740, 593)
 
+
 def layer3_quest_15(driver):
     driver.get(url_quest_15)
-    print(driver.window_handles)
-    #начало задания
+
+    # начало задания
     selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[2]/button'
     click_element(selector)
 
@@ -328,11 +329,11 @@ def layer3_quest_15(driver):
     selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
     click_element(selector)
 
-    #часть 2
+    # часть 2
     selector = '//*[@id="radix-:ra:"]/div/div[2]/div[2]/div/div/div/a/button'
     click_element(selector)
 
-    #переход на параграф
+    # переход на параграф
     driver.switch_to.window(driver.window_handles[2])
 
     selector = '//*[@id="headlessui-dialog-panel-:r1:"]/div[2]/div/div[2]/div/span'
@@ -350,13 +351,12 @@ def layer3_quest_15(driver):
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button/div/div'
     click_element(selector)
 
-    print(driver.window_handles)
-    #переключение на рабби
-    print("00")
-    driver.switch_to.window(driver.window_handles[1])
-    print("01")
+    # при открытии окна кошелька нужна небольшая пауза перед переключением на другое окно, т.к. оно не сразу появляется
+    time.sleep(2)
+    # переключение на рабби
+    driver.switch_to.window(driver.window_handles[3])
 
-    #коннект в рабби
+    # коннект в рабби
     selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
     click_element(selector)
     print("02")
@@ -379,10 +379,8 @@ def main():
 
     rabby_wallet_login(driver)
 
-    layer3_quest_intro_to_cube(driver)
+    layer3_connect_wallet_and_login(driver)
     layer3_quest_15(driver)
-
-
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
