@@ -359,9 +359,73 @@ def layer3_quest_15(driver):
     # коннект в рабби
     selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
     click_element(selector)
-    print("02")
 
-    time.sleep(10)
+    # sign msg
+    driver.switch_to.window(driver.window_handles[2])
+    selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[2]/div[2]/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+    #sing and create
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+    #sent
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+    # #collect
+    # driver.switch_to.window(driver.window_handles[2])
+    # selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[3]/div[1]/button'
+    # click_element(selector)
+    #
+    # selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div[1]/div/button'
+    # click_element(selector)
+    # time.sleep(3)
+    #
+    # # sing and create
+    # driver.switch_to.window(driver.window_handles[3])
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    # click_element(selector)
+    # # sent
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    # click_element(selector)
+
+    time.sleep(1)
+    #закрыть окно парагарафа
+    driver.switch_to.window(driver.window_handles[2])
+    driver.close()
+
+    time.sleep(1)
+    #вернуться в окно layer3
+    driver.switch_to.window(driver.window_handles[1])
+
+    #verif этап 2
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button[2]'
+    click_element(selector)
+
+    #switch network
+    selector = '//*[@id="radix-:ra:"]/div/div[2]/div/div/div/div/button'
+    click_element(selector)
+
+    #claim cube
+    selector = '//*[@id="radix-:ra:"]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    #rabby подписания
+    time.sleep(3)
+    print(driver.window_handles)
+    # sing and create
+    driver.switch_to.window(driver.window_handles[2])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+    # sent
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
 
 
 def main():
