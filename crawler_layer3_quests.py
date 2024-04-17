@@ -1,6 +1,6 @@
 import os
 
-from chrome_crawler_berachain import click_element
+from crawler_layer3 import click_element
 
 url_quest_1 = os.getenv('URL_QUEST_1')
 url_quest_15 = os.getenv('URL_QUEST_15')
