@@ -1,7 +1,6 @@
 import os
 import time
 import pickle
-import zipfile
 import pyautogui
 import undetected_chromedriver as uc
 
@@ -12,6 +11,7 @@ from selenium import webdriver
 from fake_useragent import UserAgent
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
+from lib.proxy import get_plugin_file as plugin_file
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -26,56 +26,6 @@ wait: ClassVar[WebDriverWait]
 
 cookies = 'cookies.dat'
 
-# создание экстеншна для прокси. TODO вынести в отдельный файл
-manifest_json = """
-{
-    "version": "1.0.0",
-    "manifest_version": 2,
-    "name": "Chrome Proxy",
-    "permissions": [
-        "proxy",
-        "tabs",
-        "unlimitedStorage",
-        "storage",
-        "<all_urls>",
-        "webRequest",
-        "webRequestBlocking"
-    ],
-    "background": {
-        "scripts": ["background.js"]
-    },
-    "minimum_chrome_version":"22.0.0"
-}
-"""
-
-background_js = """
-var config = {
-        mode: "fixed_servers",
-        rules: {
-        singleProxy: {
-            scheme: "http",
-            host: "%s",
-            port: parseInt(%s)
-        },
-        bypassList: ["localhost"]
-        }
-    };
-chrome.proxy.settings.set({value: config, scope: "regular"}, function() {});
-function callbackFn(details) {
-    return {
-        authCredentials: {
-            username: "%s",
-            password: "%s"
-        }
-    };
-}
-chrome.webRequest.onAuthRequired.addListener(
-            callbackFn,
-            {urls: ["<all_urls>"]},
-            ['blocking']
-);
-""" % (os.getenv('PROXY_HOST'), os.getenv('PROXY_PORT'), os.getenv('PROXY_USERNAME'), os.getenv('PROXY_PASSWORD'))
-
 
 def get_chromedriver(use_proxy=False, user_agent=None):
     # создание экземпляра настроек хрома
@@ -83,20 +33,15 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     options.add_argument("--start-maximized")
     options.add_argument("--disable-blink-features=AutomationControlled")
 
-    # options.add_extension('extensions/Rabby-Wallet.crx')
-    # options.add_extension('extensions/MetaMask.crx')
-    # options.add_argument('--load-extension=extensions/MetaMask')
-    options.add_argument('--load-extension=extensions/Rabby-Wallet')
+    extensions = ['extensions/Rabby-Wallet']
 
     if use_proxy:
-        plugin_file = 'proxy_auth_plugin.zip'
-
-        with zipfile.ZipFile(plugin_file, 'w') as zp:
-            zp.writestr("manifest.json", manifest_json)
-            zp.writestr("background.js", background_js)
-        options.add_extension(plugin_file)
+        extensions.append(plugin_file())
     if user_agent:
         options.add_argument('--user-agent=%s' % user_agent)
+
+    extensions_string = ','.join(extensions)
+    options.add_argument('--load-extension=' + extensions_string)
 
     # обычный драйвер
     # driver = webdriver.Chrome(options=options)
@@ -132,7 +77,6 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
 
 # функция для логина в rabby wallet
 def rabby_wallet_login(driver):
-
     time.sleep(5)
     # клики на расширениях для использования
     # TODO надо использовать через url расширения и убрать клики
@@ -316,7 +260,7 @@ def layer3_quest_15(driver):
     selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[2]/button'
     click_element(selector)
 
-    #1 часть
+    # 1 часть
     selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
     click_element(selector)
 
@@ -366,12 +310,12 @@ def layer3_quest_15(driver):
     click_element(selector)
     time.sleep(2)
 
-    #sing and create
+    # sing and create
     driver.switch_to.window(driver.window_handles[3])
 
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
     click_element(selector)
-    #sent
+    # sent
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
     click_element(selector)
 
@@ -395,27 +339,27 @@ def layer3_quest_15(driver):
     # click_element(selector)
 
     time.sleep(1)
-    #закрыть окно парагарафа
+    # закрыть окно парагарафа
     driver.switch_to.window(driver.window_handles[2])
     driver.close()
 
     time.sleep(1)
-    #вернуться в окно layer3
+    # вернуться в окно layer3
     driver.switch_to.window(driver.window_handles[1])
 
-    #verif этап 2
+    # verif этап 2
     selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button[2]'
     click_element(selector)
 
-    #switch network
+    # switch network
     selector = '//*[@id="radix-:ra:"]/div/div[2]/div/div/div/div/button'
     click_element(selector)
 
-    #claim cube
+    # claim cube
     selector = '//*[@id="radix-:ra:"]/div/div[2]/div/div/div/button[2]'
     click_element(selector)
 
-    #rabby подписания
+    # rabby подписания
     time.sleep(3)
     print(driver.window_handles)
     # sing and create

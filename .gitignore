@@ -3,3 +3,4 @@
 /venv/
 /.env
 /proxy_auth_plugin.zip
+/extensions/ProxyAuthPlugin/
