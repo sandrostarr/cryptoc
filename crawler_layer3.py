@@ -19,6 +19,7 @@ load_dotenv()
 url_quest_1 = os.getenv('URL_QUEST_1')
 url_quest_15 = os.getenv('URL_QUEST_15')
 url_quest_68 = os.getenv('URL_QUEST_68')
+# url_quest_28 = os.getenv('URL_QUEST_28')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -118,7 +119,7 @@ def rabby_wallet_login(driver):
 
     # click next
     selector = '//*[@id="root"]/div/section/footer/button'
-    click_element(selector)
+    click_element(selector, 1)
 
     # click get ready
     selector = '//*[@id="root"]/div/section/footer/a/button'
@@ -223,25 +224,21 @@ def layer3_quest_15(driver):
     # TODO переписать под новый интерфейс
     driver.get(url_quest_15)
 
-    # начало задания
-    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[2]/button'
-    click_element(selector)
-
     # 1 часть
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
     # часть 2
-    selector = '//*[@id="radix-:ra:"]/div/div[2]/div[2]/div/div/div/a/button'
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
     click_element(selector)
 
     # переход на параграф
@@ -253,17 +250,19 @@ def layer3_quest_15(driver):
     selector = '//*[@id="para-document"]/div/div/div[1]/div[1]/a/div/div/div[1]/img'
     click_element(selector)
 
+    # click collect
     selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[3]/div[1]/button'
-    click_element(selector)
+    click_element(selector, 1)
 
-    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div/div[1]/div/div/button'
+    # click connect wallet
+    selector = '//*[@id="para-document"]/div/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div/div[1]/div/div/button'
     click_element(selector)
 
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button/div/div'
     click_element(selector)
 
     # при открытии окна кошелька нужна небольшая пауза перед переключением на другое окно, т.к. оно не сразу появляется
-    time.sleep(2)
+    time.sleep(3)
     # переключение на рабби
     driver.switch_to.window(driver.window_handles[3])
 
@@ -272,31 +271,26 @@ def layer3_quest_15(driver):
     click_element(selector)
 
     # sign msg
+    time.sleep(2)
     driver.switch_to.window(driver.window_handles[2])
+
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[2]/div[2]/button[1]'
     click_element(selector)
+
     time.sleep(2)
-
-    # sing and create
     driver.switch_to.window(driver.window_handles[3])
+    # TODO возможно, нужно переключение на экран кошелька тоже воткнуть в функцию create_sign_sent_rabby
+    create_sign_sent_rabby(driver, 2)
 
-    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
-    click_element(selector)
-    # sent
-    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
-    click_element(selector)
-
-    time.sleep(1)
-    # закрыть окно парагарафа
-    driver.switch_to.window(driver.window_handles[2])
+    # закрыть окно параграфа
     driver.close()
 
     time.sleep(1)
     # вернуться в окно layer3
     driver.switch_to.window(driver.window_handles[1])
 
-    # verif этап 2
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button[2]'
+    # verify этап 2
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
     click_element(selector)
 
     # switch network
@@ -309,8 +303,7 @@ def layer3_quest_15(driver):
 
     # rabby подписания
     time.sleep(3)
-    print(driver.window_handles)
-    # sing and create
+    # sign and create
     driver.switch_to.window(driver.window_handles[2])
 
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
@@ -323,6 +316,10 @@ def layer3_quest_15(driver):
 
 def layer3_quest_68(driver):
     driver.get(url_quest_68)
+
+
+# def layer3_quest_28(driver):
+#     driver.get(url_quest_28)
 
 
 def main():
@@ -338,8 +335,9 @@ def main():
 
     layer3_connect_wallet_and_login(driver)
 
-    # layer3_quest_15(driver)
-    layer3_quest_68(driver)
+    layer3_quest_15(driver)
+    # layer3_quest_68(driver)
+    # layer3_quest_28(driver)
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
