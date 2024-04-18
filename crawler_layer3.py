@@ -20,6 +20,7 @@ load_dotenv()
 # url = os.getenv('URL') TODO вынести berachain в отдельный скрипт
 url_quest_1 = os.getenv('URL_QUEST_1')
 url_quest_15 = os.getenv('URL_QUEST_15')
+url_quest_68 = os.getenv('URL_QUEST_68')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -74,6 +75,16 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
     element = wait.until(ec.presence_of_element_located((By.XPATH, element_selector)))
     element.send_keys(input_text)
 
+
+#создание и подписание транз в rabby
+def create_sign_sent_rabby():
+    # rabbu sign and create
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+
+    # rabby sent
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
 
 # функция для логина в rabby wallet
 def rabby_wallet_login(driver):
@@ -147,6 +158,8 @@ def rabby_wallet_login(driver):
 
     driver.switch_to.window(driver.window_handles[1])
 
+    time.sleep(1)
+
     # это настройка расширения rabby без клика по экрану. В undetected_chromedriver почему-то не работает
     # TODO пофиксить и использовать вместо кликов
     # # open extension create password page
@@ -184,11 +197,11 @@ def layer3_connect_wallet_and_login(driver):
     driver.get(url_quest_1)
 
     # connect wallet
-    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
+    selector = '//*[@id="__next"]/div/div/div/div[2]/header/div/div[2]/div/div[2]/div[1]/button'
     click_element(selector)
 
     # rabby wallet
-    selector = '//*[@id="radix-:rc:-content-evm"]/div/button[1]'
+    selector = '//*[@id="radix-:rd:-content-evm"]/div/button[1]/div'
     click_element(selector, 1)
 
     time.sleep(2)
@@ -199,37 +212,16 @@ def layer3_connect_wallet_and_login(driver):
     selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
     click_element(selector)
 
-    driver.switch_to.window(driver.window_handles[1])
-
-    # log in to start
-    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/button'
-    click_element(selector)
-
-    # rabby wallet
-    selector = '//*[@id="radix-:ri:-content-evm"]/div/button[1]'
-    click_element(selector, 2)
-
-    time.sleep(2)
+    time.sleep(1)
 
     driver.switch_to.window(driver.window_handles[2])
+    create_sign_sent_rabby()
 
-    # rabby wallet click sign and create
-    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
-    click_element(selector)
-
-    # rabby wallet click confirm
-    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
-    click_element(selector)
-
-    driver.switch_to.window(driver.window_handles[1])
-
-    time.sleep(3)
-
-    # click captcha
-    pyautogui.click(740, 593)
 
 
 def layer3_quest_15(driver):
+    #TODO переписать под новый интерфейс
+
     driver.get(url_quest_15)
 
     # начало задания
@@ -296,25 +288,6 @@ def layer3_quest_15(driver):
     click_element(selector)
 
     time.sleep(1)
-    # #collect
-    # driver.switch_to.window(driver.window_handles[2])
-    # selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[3]/div[1]/button'
-    # click_element(selector)
-    #
-    # selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div[1]/div/button'
-    # click_element(selector)
-    # time.sleep(3)
-    #
-    # # sing and create
-    # driver.switch_to.window(driver.window_handles[3])
-    #
-    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
-    # click_element(selector)
-    # # sent
-    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
-    # click_element(selector)
-
-    time.sleep(1)
     # закрыть окно парагарафа
     driver.switch_to.window(driver.window_handles[2])
     driver.close()
@@ -347,6 +320,11 @@ def layer3_quest_15(driver):
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
     click_element(selector)
 
+def layer3_quest_68(driver):
+    print('start')
+    driver.get(url_quest_68)
+    driver.get(url_quest_68)
+    print('finish')
 
 def main():
     # генерация фейкового юзерагента
@@ -360,7 +338,12 @@ def main():
     rabby_wallet_login(driver)
 
     layer3_connect_wallet_and_login(driver)
-    layer3_quest_15(driver)
+    print('con fin')
+    # layer3_quest_15(driver)
+    layer3_quest_68(driver)
+
+    print('fin q')
+
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
