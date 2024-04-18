@@ -7,17 +7,15 @@ import undetected_chromedriver as uc
 from typing import ClassVar
 from dotenv import load_dotenv
 from selenium import webdriver
-
 from fake_useragent import UserAgent
-from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.common import TimeoutException
 from lib.proxy import get_plugin_file as plugin_file
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 load_dotenv()
 
-# url = os.getenv('URL') TODO вынести berachain в отдельный скрипт
 url_quest_1 = os.getenv('URL_QUEST_1')
 url_quest_15 = os.getenv('URL_QUEST_15')
 url_quest_68 = os.getenv('URL_QUEST_68')
@@ -76,15 +74,21 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
     element.send_keys(input_text)
 
 
-#создание и подписание транз в rabby
-def create_sign_sent_rabby():
-    # rabbu sign and create
+# создание и подписание транз в rabby
+def create_sign_sent_rabby(driver: uc.Chrome, window_number_to_return: int):
+    # rabby sign and create
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
     click_element(selector)
 
     # rabby sent
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
     click_element(selector)
+
+    # после нажатия кнопки окно закрывается, selenium теряет фокус с окна и падает ошибка
+    # поэтому надо вернуться на предыдущее окно сразу после нажатия на кнопку
+    driver.switch_to.window(driver.window_handles[window_number_to_return])
+    time.sleep(1)
+
 
 # функция для логина в rabby wallet
 def rabby_wallet_login(driver):
@@ -101,8 +105,6 @@ def rabby_wallet_login(driver):
 
     time.sleep(0.1)
 
-    # pyautogui.click(1580, 100)
-
     # click rabby
     rabby_location = pyautogui.locateOnScreen('IMG/rabbi_wall.png')
     print(ext_location)
@@ -110,8 +112,6 @@ def rabby_wallet_login(driver):
     rabby_locationY = rabby_location.top / 2 + rabby_location.height / 4
     pyautogui.moveTo(rabby_locationX, rabby_locationY)
     pyautogui.click(button='left')
-
-    # pyautogui.click(1400, 270)
 
     # переключение на rabby
     driver.switch_to.window(driver.window_handles[2])
@@ -215,13 +215,12 @@ def layer3_connect_wallet_and_login(driver):
     time.sleep(1)
 
     driver.switch_to.window(driver.window_handles[2])
-    create_sign_sent_rabby()
 
+    create_sign_sent_rabby(driver, 1)
 
 
 def layer3_quest_15(driver):
-    #TODO переписать под новый интерфейс
-
+    # TODO переписать под новый интерфейс
     driver.get(url_quest_15)
 
     # начало задания
@@ -316,15 +315,15 @@ def layer3_quest_15(driver):
 
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
     click_element(selector)
+
     # sent
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
     click_element(selector)
 
+
 def layer3_quest_68(driver):
-    print('start')
     driver.get(url_quest_68)
-    driver.get(url_quest_68)
-    print('finish')
+
 
 def main():
     # генерация фейкового юзерагента
@@ -338,12 +337,9 @@ def main():
     rabby_wallet_login(driver)
 
     layer3_connect_wallet_and_login(driver)
-    print('con fin')
+
     # layer3_quest_15(driver)
     layer3_quest_68(driver)
-
-    print('fin q')
-
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
