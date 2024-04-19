@@ -7,19 +7,26 @@ import undetected_chromedriver as uc
 from typing import ClassVar
 from dotenv import load_dotenv
 from selenium import webdriver
+
 from fake_useragent import UserAgent
-from selenium.webdriver.common.by import By
 from selenium.common import TimeoutException
+from selenium.webdriver.common.by import By
 from lib.proxy import get_plugin_file as plugin_file
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 load_dotenv()
 
+# url = os.getenv('URL') TODO вынести berachain в отдельный скрипт
 url_quest_1 = os.getenv('URL_QUEST_1')
 url_quest_15 = os.getenv('URL_QUEST_15')
-url_quest_68 = os.getenv('URL_QUEST_68')
-# url_quest_28 = os.getenv('URL_QUEST_28')
+url_quest_66 = os.getenv('URL_QUEST_66')
+url_quest_101 = os.getenv('URL_QUEST_101')
+url_quest_34 = os.getenv('URL_QUEST_34')
+url_quest_35 = os.getenv('URL_QUEST_35')
+url_quest_44 = os.getenv('URL_QUEST_44')
+url_quest_58 = os.getenv('URL_QUEST_58')
+
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -75,21 +82,17 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
     element.send_keys(input_text)
 
 
-# создание и подписание транз в rabby
-def create_sign_sent_rabby(driver: uc.Chrome, window_number_to_return: int):
-    # rabby sign and create
+#создание и подписание транз в rabby
+def create_sign_sent_rabby():
+    # rabbu sign and create
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
     click_element(selector)
+
+    time.sleep(4)
 
     # rabby sent
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
     click_element(selector)
-
-    # после нажатия кнопки окно закрывается, selenium теряет фокус с окна и падает ошибка
-    # поэтому надо вернуться на предыдущее окно сразу после нажатия на кнопку
-    driver.switch_to.window(driver.window_handles[window_number_to_return])
-    time.sleep(1)
-
 
 # функция для логина в rabby wallet
 def rabby_wallet_login(driver):
@@ -106,6 +109,8 @@ def rabby_wallet_login(driver):
 
     time.sleep(0.1)
 
+    # pyautogui.click(1580, 100)
+
     # click rabby
     rabby_location = pyautogui.locateOnScreen('IMG/rabbi_wall.png')
     print(ext_location)
@@ -114,12 +119,14 @@ def rabby_wallet_login(driver):
     pyautogui.moveTo(rabby_locationX, rabby_locationY)
     pyautogui.click(button='left')
 
+    # pyautogui.click(1400, 270)
+
     # переключение на rabby
     driver.switch_to.window(driver.window_handles[2])
 
     # click next
     selector = '//*[@id="root"]/div/section/footer/button'
-    click_element(selector, 1)
+    click_element(selector)
 
     # click get ready
     selector = '//*[@id="root"]/div/section/footer/a/button'
@@ -216,29 +223,37 @@ def layer3_connect_wallet_and_login(driver):
     time.sleep(1)
 
     driver.switch_to.window(driver.window_handles[2])
+    create_sign_sent_rabby()
 
-    create_sign_sent_rabby(driver, 1)
+    time.sleep(1)
+    driver.switch_to.window(driver.window_handles[1])
+
 
 
 def layer3_quest_15(driver):
-    # TODO переписать под новый интерфейс
+    #TODO переписать под новый интерфейс
+
     driver.get(url_quest_15)
 
+    # начало задания
+    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[2]/button'
+    click_element(selector)
+
     # 1 часть
-    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
     click_element(selector)
 
-    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
     click_element(selector)
 
-    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
     click_element(selector)
 
-    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
     click_element(selector)
 
     # часть 2
-    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    selector = '//*[@id="radix-:ra:"]/div/div[2]/div[2]/div/div/div/a/button'
     click_element(selector)
 
     # переход на параграф
@@ -250,19 +265,17 @@ def layer3_quest_15(driver):
     selector = '//*[@id="para-document"]/div/div/div[1]/div[1]/a/div/div/div[1]/img'
     click_element(selector)
 
-    # click collect
     selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[3]/div[1]/button'
-    click_element(selector, 1)
+    click_element(selector)
 
-    # click connect wallet
-    selector = '//*[@id="para-document"]/div/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div/div[1]/div/div/button'
+    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div/div[1]/div/div/button'
     click_element(selector)
 
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button/div/div'
     click_element(selector)
 
     # при открытии окна кошелька нужна небольшая пауза перед переключением на другое окно, т.к. оно не сразу появляется
-    time.sleep(3)
+    time.sleep(2)
     # переключение на рабби
     driver.switch_to.window(driver.window_handles[3])
 
@@ -271,26 +284,31 @@ def layer3_quest_15(driver):
     click_element(selector)
 
     # sign msg
-    time.sleep(2)
     driver.switch_to.window(driver.window_handles[2])
-
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[2]/div[2]/button[1]'
     click_element(selector)
-
     time.sleep(2)
-    driver.switch_to.window(driver.window_handles[3])
-    # TODO возможно, нужно переключение на экран кошелька тоже воткнуть в функцию create_sign_sent_rabby
-    create_sign_sent_rabby(driver, 2)
 
-    # закрыть окно параграфа
+    # sing and create
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+    # sent
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+    # закрыть окно парагарафа
+    driver.switch_to.window(driver.window_handles[2])
     driver.close()
 
     time.sleep(1)
     # вернуться в окно layer3
     driver.switch_to.window(driver.window_handles[1])
 
-    # verify этап 2
-    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    # verif этап 2
+    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button[2]'
     click_element(selector)
 
     # switch network
@@ -303,23 +321,698 @@ def layer3_quest_15(driver):
 
     # rabby подписания
     time.sleep(3)
-    # sign and create
+    print(driver.window_handles)
+    # sing and create
     driver.switch_to.window(driver.window_handles[2])
 
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
     click_element(selector)
-
     # sent
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
     click_element(selector)
 
 
-def layer3_quest_68(driver):
-    driver.get(url_quest_68)
+def layer3_quest_66(driver):
+    driver.get(url_quest_66)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+
+    # go to zora mint
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(1)
+    print('zora')
+    driver.switch_to.window(driver.window_handles[2])
+    print('conn')
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+    print('rab')
+    selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+    print('rabby win')
+    # connect rabby to zora
+    driver.switch_to.window(driver.window_handles[3])
+    print('connect')
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    time.sleep(2)
+
+    print('sleep')
+    driver.switch_to.window(driver.window_handles[3])
+
+    time.sleep(1)
+
+    create_sign_sent_rabby()
+
+    time.sleep(1)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    #mint
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    click_element(selector)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    click_element(selector)
+
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[3])
+
+    time.sleep(10)
+
+    # create_sign_sent_rabby()
+    time.sleep(1)
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+
+    #close rabby back to layer3
+    driver.switch_to.window(driver.window_handles[2])
+    driver.close()
+
+    time.sleep(1)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+    time.sleep(1)
+
+    #verif mint
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    #claim box
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    time.sleep(1)
+    #rabby sign
+    driver.switch_to.window(driver.window_handles[2])
+
+    time.sleep(1)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    time.sleep(2)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    driver.switch_to.window(driver.window_handles[1])
 
 
-# def layer3_quest_28(driver):
-#     driver.get(url_quest_28)
+def layer3_quest_101(driver):
+    driver.get(url_quest_101)
+
+    #step 1
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+
+    time.sleep(.1)
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    click_element(selector)
+
+    #step 2
+    #go to zora
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(.1)
+    #switch to new window
+    driver.switch_to.window(driver.window_handles[2])
+
+    #connect to zora
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+
+    #choose rabby
+    selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+    #switch to rabby
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+    driver.switch_to.window(driver.window_handles[3])
+
+    create_sign_sent_rabby()
+
+    time.sleep(1)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    #mint collection
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+
+    #chng netw
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[2]/div[3]/div/button'
+    click_element(selector)
+
+    #mint
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[2]/div[3]/div/button'
+    click_element(selector)
+
+    time.sleep(2)
+    #switch to rabbby
+    driver.switch_to.window(driver.window_handles[3])
+
+    time.sleep(1)
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+
+
+    time.sleep(1)
+    #swtch to zora
+    driver.switch_to.window(driver.window_handles[2])
+
+    driver.close()
+    time.sleep(.5)
+
+    # #nack to layer
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(10)
+
+    #step 3
+    #verif btn
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    #step 4
+    #claim box
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    time.sleep(1)
+
+    #swtch to rabby
+    driver.switch_to.window(driver.window_handles[2])
+
+    time.sleep(1)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+
+def layer3_quest_34(driver):
+    driver.get(url_quest_34)
+
+    #step 1
+    #verif
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+
+    time.sleep(.2)
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    click_element(selector)
+
+    #step 2
+    #go to zora
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(.5)
+    driver.switch_to.window(driver.window_handles[2])
+
+    #mint btn to connect
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    #select rabby
+    selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(1)
+
+    #swtch rabby
+    driver.switch_to.window(driver.window_handles[3])
+    #connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+    #sign create
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(4)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    #mint nft
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+    time.sleep(.3)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[4]/div/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[4]/div/div/button'
+    click_element(selector)
+    time.sleep(1.5)
+
+    #to rabby
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    time.sleep(1)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(10)
+
+    #close zora
+    driver.switch_to.window(driver.window_handles[2])
+    driver.close()
+    time.sleep(.1)
+
+    #back to l3
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(.5)
+
+    #verif quest
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(5)
+
+    #step 4
+    #switch chain
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    click_element(selector)
+    time.sleep(.2)
+
+    #mint
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(1)
+
+    #swtch to rabby
+    driver.switch_to.window(driver.window_handles[2])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+    time.sleep(.2)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(.2)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+
+def layer3_quest_35(driver):
+    driver.get(url_quest_35)
+
+    #step 1
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    #step2
+    # step 2
+    # go to zora
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(.5)
+    driver.switch_to.window(driver.window_handles[2])
+
+    # mint btn to connect
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    # select rabby
+    selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(1)
+
+    # swtch rabby
+    driver.switch_to.window(driver.window_handles[3])
+    # connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+    # sign create
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(4)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    # mint nft
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    click_element(selector)
+    time.sleep(2)
+
+    # to rabby
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    time.sleep(1)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(10)
+
+    # close zora
+    driver.switch_to.window(driver.window_handles[2])
+    driver.close()
+    time.sleep(.1)
+
+    # back to l3
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(.5)
+
+    # verif quest
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(5)
+
+    # step 4
+    # switch chain
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    click_element(selector)
+    time.sleep(.2)
+
+    # mint
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(1)
+
+    # swtch to rabby
+    driver.switch_to.window(driver.window_handles[2])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+def layer3_quest_44(driver):
+    driver.get(url_quest_44)
+
+    # #step 1
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(.1)
+    #
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(.1)
+
+    #step2
+    # step 2
+    # go to sound
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(.5)
+    driver.switch_to.window(driver.window_handles[2])
+
+    # mint btn to connect
+    selector = '//*[@id="right-container"]/div/div/div[2]/div/div/div/div[3]/button'
+    click_element(selector)
+    time.sleep(.5)
+    #TODO дальше не тестировал не видит подключения к кошелькам
+    # select rabby
+    selector = ''
+    click_element(selector)
+    time.sleep(.2)
+
+    selector = '//*[@id="dynamic-modal"]/div//div/div/div[2]/div[2]/div/div/div/div/div/div[1]/div[1]/div[2]/div[3]/div/button[1]'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # # swtch rabby
+    # driver.switch_to.window(driver.window_handles[3])
+    # # connect
+    # selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    # click_element(selector)
+    # time.sleep(2)
+    #
+    # # sign create
+    # driver.switch_to.window(driver.window_handles[3])
+    #
+    # selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    # click_element(selector)
+    #
+    # selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    # click_element(selector)
+    #
+    # time.sleep(4)
+    #
+    # driver.switch_to.window(driver.window_handles[2])
+    #
+    # # mint nft
+    # selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    # click_element(selector)
+    # time.sleep(.5)
+    #
+    # selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    # click_element(selector)
+    # time.sleep(.5)
+    #
+    # selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    # click_element(selector)
+    # time.sleep(2)
+    #
+    # # to rabby
+    # driver.switch_to.window(driver.window_handles[3])
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    # click_element(selector)
+    #
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    # click_element(selector)
+    # time.sleep(10)
+    #
+    # # close zora
+    # driver.switch_to.window(driver.window_handles[2])
+    # driver.close()
+    # time.sleep(.1)
+    #
+    # # back to l3
+    # driver.switch_to.window(driver.window_handles[1])
+    # time.sleep(.5)
+    #
+    # # verif quest
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    # click_element(selector)
+    # time.sleep(5)
+    #
+    # # step 4
+    # # switch chain
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(.2)
+    #
+    # # mint
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # # swtch to rabby
+    # driver.switch_to.window(driver.window_handles[2])
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    # click_element(selector)
+    # time.sleep(.5)
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    # click_element(selector)
+    # time.sleep(2)
+    #
+    # driver.switch_to.window(driver.window_handles[1])
+
+
+def layer3_quest_58(driver):
+    driver.get(url_quest_58)
+
+    #step 1
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    click_element(selector)
+    time.sleep(.1)
+
+    #step2
+    # step 2
+    # go to zora
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(.5)
+    driver.switch_to.window(driver.window_handles[2])
+
+    # mint btn to connect
+    selector = '//*[@id="navigation"]/nav/div[3]/button[2]'
+    click_element(selector)
+    time.sleep(.1)
+
+    # select rabby
+    selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(1)
+
+    # swtch rabby
+    driver.switch_to.window(driver.window_handles[3])
+    # connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+    # sign create
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(4)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    # mint nft
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div/div[1]/div[1]/div'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[2]/div[6]/button'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[2]/div[6]/button'
+    click_element(selector)
+    time.sleep(2)
+
+    # to rabby
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    time.sleep(1)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(10)
+
+    # close zora
+    driver.switch_to.window(driver.window_handles[2])
+    driver.close()
+    time.sleep(.1)
+
+    # back to l3
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(.5)
+
+    # verif quest
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(5)
+
+    # step 4
+    # switch chain
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    click_element(selector)
+    time.sleep(.2)
+
+    # mint
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(1)
+
+    # swtch to rabby
+    driver.switch_to.window(driver.window_handles[2])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[1])
+
+
 
 
 def main():
@@ -335,9 +1028,17 @@ def main():
 
     layer3_connect_wallet_and_login(driver)
 
-    layer3_quest_15(driver)
-    # layer3_quest_68(driver)
-    # layer3_quest_28(driver)
+    # layer3_quest_15(driver)
+    # layer3_quest_66(driver)
+    # layer3_quest_101(driver)
+    # layer3_quest_34(driver)
+    # layer3_quest_35(driver)
+    # layer3_quest_44(driver)
+    layer3_quest_58(driver)
+
+
+
+
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
