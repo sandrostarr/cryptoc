@@ -221,6 +221,37 @@ def layer3_connect_wallet_and_login(driver):
     create_sign_sent_rabby(driver, 1)
 
 
+def layer3_quest_1(driver):
+    driver.get(url_quest_1)
+
+    # start part 1
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+
+    # click continue (x6)
+    for x in range(0, 6):
+        selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+        click_element(selector)
+
+    # open layer3 bridge
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[4]/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(1)
+    # переход на layer3 bridge
+    driver.switch_to.window(driver.window_handles[2])
+
+    # TODO здесь должна быть свапалка
+
+    # review route
+    selector = '/html/body/div[1]/div/div/div/div[3]/div[1]/section[2]/button'
+    click_element(selector)
+
+    # approve transfer
+    selector = '/html/body/div[1]/div/div/div/div[3]/div/section/div/div/div/button'
+    click_element(selector)
+
+
 def layer3_quest_15(driver):
     # TODO переписать под новый интерфейс
     driver.get(url_quest_15)
@@ -399,6 +430,7 @@ def main():
 
     layer3_connect_wallet_and_login(driver)
 
+    # layer3_quest_1(driver)
     # layer3_quest_15(driver)
     # layer3_quest_68(driver)
     # layer3_quest_28(driver)
