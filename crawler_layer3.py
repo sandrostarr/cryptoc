@@ -19,7 +19,8 @@ load_dotenv()
 url_quest_1 = os.getenv('URL_QUEST_1')
 url_quest_15 = os.getenv('URL_QUEST_15')
 url_quest_68 = os.getenv('URL_QUEST_68')
-# url_quest_28 = os.getenv('URL_QUEST_28')
+url_quest_28 = os.getenv('URL_QUEST_28')
+url_quest_29 = os.getenv('URL_QUEST_29')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -318,8 +319,71 @@ def layer3_quest_68(driver):
     driver.get(url_quest_68)
 
 
-# def layer3_quest_28(driver):
-#     driver.get(url_quest_28)
+def layer3_quest_28(driver):
+    driver.get(url_quest_28)
+
+    # open sound
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[1]/div/div/a/button'
+    click_element(selector)
+
+    # переход на параграф
+    driver.switch_to.window(driver.window_handles[2])
+
+    # click collect
+    selector = '//*[@id="right-container"]/div/div/div[2]/div/div/div/div[3]/button'
+    click_element(selector)
+
+    # click rabby wallet
+    selector = '//*[@id="dynamic-modal"]/div//div/div/div[2]/div[2]/div/div/div/div/div/div[1]/div/div[2]/div[2]/div/div[2]/button[1]'
+    click_element(selector)
+
+
+def layer3_quest_29(driver):
+    driver.get(url_quest_29)
+
+    # click continue
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+
+    # click continue
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    click_element(selector)
+
+    # open zora
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    # переход на zora
+    driver.switch_to.window(driver.window_handles[2])
+
+    time.sleep(1)
+
+    # click collect
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+
+    time.sleep(5)
+    # click rabby wallet
+    selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
+    click_element(selector)
+
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[3])
+
+    # rabby wallet click connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    time.sleep(5)
+
+    driver.switch_to.window(driver.window_handles[3])
+
+    create_sign_sent_rabby(driver, 2)
+
+    # click collect
+    selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
 
 
 def main():
@@ -335,9 +399,10 @@ def main():
 
     layer3_connect_wallet_and_login(driver)
 
-    layer3_quest_15(driver)
+    # layer3_quest_15(driver)
     # layer3_quest_68(driver)
     # layer3_quest_28(driver)
+    # layer3_quest_29(driver)
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
@@ -349,4 +414,4 @@ if __name__ == '__main__':
     main()
 
     # временный костыль для дебага
-    time.sleep(300)
+    time.sleep(3000)
