@@ -230,6 +230,10 @@ def layer3_connect_wallet_and_login(driver):
 def layer3_quest_1(driver):
     driver.get(url_quest_1)
 
+    # TODO скрипт для запуска уже пройденных этапов с начала
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[1]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
+
     # start part 1
     selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
@@ -240,7 +244,7 @@ def layer3_quest_1(driver):
         click_element(selector)
 
     # open layer3 bridge
-    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[4]/div/div/a/button'
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[3]/div/div/a/button'
     click_element(selector)
 
     time.sleep(1)
@@ -248,6 +252,8 @@ def layer3_quest_1(driver):
     driver.switch_to.window(driver.window_handles[2])
 
     # TODO здесь должна быть свапалка
+    print('Свапалка, здесь нужно выбрать валюты и что-то делать')
+    time.sleep(3000)
 
     # review route
     selector = '/html/body/div[1]/div/div/div/div[3]/div[1]/section[2]/button'
@@ -259,30 +265,26 @@ def layer3_quest_1(driver):
 
 
 def layer3_quest_15(driver):
-    # TODO переписать под новый интерфейс
-
     driver.get(url_quest_15)
 
-    # начало задания
-    selector = '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[2]/button'
+    # TODO скрипт для запуска уже пройденных этапов с начала
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[1]/div/div[2]/div[2]/div[1]'
     click_element(selector)
 
-    # 1 часть
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    # start part 1
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
+    # click continue (x3)
+    for x in range(0, 3):
+        selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+        click_element(selector)
+
+    # part 2 open paragraph
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
     click_element(selector)
 
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
-    click_element(selector)
-
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button/span'
-    click_element(selector)
-
-    # часть 2
-    selector = '//*[@id="radix-:ra:"]/div/div[2]/div[2]/div/div/div/a/button'
-    click_element(selector)
+    time.sleep(1)
 
     # переход на параграф
     driver.switch_to.window(driver.window_handles[2])
@@ -293,14 +295,18 @@ def layer3_quest_15(driver):
     selector = '//*[@id="para-document"]/div/div/div[1]/div[1]/a/div/div/div[1]/img'
     click_element(selector)
 
-    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[3]/div[1]/button'
+    selector = '//*[@id="para-document"]/div/div/div/div[2]/header/div/div/div/aside/div[2]/div[4]/div[1]/button'
     click_element(selector)
 
-    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div/div/div[2]/div[3]/div/div/div[1]/div/div/button'
+    selector = '//*[@id="para-document"]/div/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div[1]/div/div[2]/div[3]/div/div/div[1]/div/div/button'
     click_element(selector)
 
-    selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button/div/div'
+    selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[3]/button'
     click_element(selector)
+
+    # TODO в выборе кошельков нет rabby, надо проверить
+    print('TODO в выборе кошельков нет rabby, надо проверить')
+    time.sleep(3000)
 
     # при открытии окна кошелька нужна небольшая пауза перед переключением на другое окно, т.к. оно не сразу появляется
     time.sleep(2)
@@ -357,10 +363,16 @@ def layer3_quest_15(driver):
 def layer3_quest_66(driver):
     driver.get(url_quest_66)
 
+    # TODO скрипт для запуска уже пройденных этапов с начала
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[1]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
+
+    # click continue
     selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
-    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    # click continue
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
     click_element(selector)
 
     # go to zora mint
@@ -368,26 +380,24 @@ def layer3_quest_66(driver):
     click_element(selector)
 
     time.sleep(1)
-    print('zora')
     driver.switch_to.window(driver.window_handles[2])
-    print('conn')
+
     selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
     click_element(selector)
-    print('rab')
+
     selector = '//*[@id="privy-modal-content"]/div/div[1]/div[3]/div/button[1]'
     click_element(selector)
 
     time.sleep(1)
-    print('rabby win')
+
     # connect rabby to zora
     driver.switch_to.window(driver.window_handles[3])
-    print('connect')
+
     selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
     click_element(selector)
 
     time.sleep(2)
 
-    print('sleep')
     driver.switch_to.window(driver.window_handles[3])
 
     create_sign_sent_rabby(driver, 2)
@@ -396,10 +406,12 @@ def layer3_quest_66(driver):
     selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
     click_element(selector)
 
+    time.sleep(2)
+
     selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
     click_element(selector)
 
-    selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[3]/div/div/button'
+    selector = '/html/body/div[2]/div/div[2]/div/div/div/div/div/div/div/div[3]/a'
     click_element(selector)
 
     time.sleep(2)
@@ -565,8 +577,11 @@ def layer3_quest_101(driver):
 def layer3_quest_34(driver):
     driver.get(url_quest_34)
 
-    # step 1
-    # verif
+    # TODO скрипт для запуска уже пройденных этапов с начала
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[1]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
+
+    # step 1 verif
     selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
     click_element(selector)
 
@@ -607,7 +622,8 @@ def layer3_quest_34(driver):
     # mint nft
     selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
     click_element(selector)
-    time.sleep(.3)
+
+    time.sleep(2)
 
     selector = '/html/body/div[2]/div/div/div/div/div/div/div[3]/div[4]/div/div/button'
     click_element(selector)
@@ -1211,6 +1227,8 @@ def layer3_quest_28(driver):
     # переход на параграф
     driver.switch_to.window(driver.window_handles[2])
 
+    time.sleep(5)
+
     # click collect
     selector = '//*[@id="right-container"]/div/div/div[2]/div/div/div/div[3]/button'
     click_element(selector)
@@ -1219,9 +1237,26 @@ def layer3_quest_28(driver):
     selector = '//*[@id="dynamic-modal"]/div//div/div/div[2]/div[2]/div/div/div/div/div/div[1]/div/div[2]/div[2]/div/div[2]/button[1]'
     click_element(selector)
 
+    time.sleep(2)
+
+    driver.switch_to.window(driver.window_handles[3])
+
+    # rabby wallet click connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    time.sleep(1)
+
+    driver.switch_to.window(driver.window_handles[3])
+    create_sign_sent_rabby(driver, 1)
+
 
 def layer3_quest_29(driver):
     driver.get(url_quest_29)
+
+    # TODO скрипт для запуска уже пройденных этапов с начала
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[1]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
 
     # click continue
     selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
@@ -1265,6 +1300,21 @@ def layer3_quest_29(driver):
 
     # click collect
     selector = '//*[@id="__next"]/div/div[3]/div[2]/div[2]/div/div[4]/div[1]/div[1]/div/button'
+    click_element(selector)
+
+    # click collect
+    selector = '/html/body/div[2]/div/div/div/div/div/div/div[2]/div[3]/div/button'
+    click_element(selector)
+
+    # close zora
+    driver.close()
+
+    time.sleep(1)
+    # вернуться в окно layer3
+    driver.switch_to.window(driver.window_handles[1])
+
+    # verify
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
     click_element(selector)
 
 
