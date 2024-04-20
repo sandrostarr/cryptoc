@@ -28,6 +28,7 @@ url_quest_44 = os.getenv('URL_QUEST_44')
 url_quest_58 = os.getenv('URL_QUEST_58')
 url_quest_13 = os.getenv('URL_QUEST_13')
 url_quest_51 = os.getenv('URL_QUEST_51')
+url_quest_17 = os.getenv('URL_QUEST_17')
 
 
 metamask_pw = os.getenv('METAMASK_PW')
@@ -1131,6 +1132,98 @@ def layer3_quest_13_51(driver):
     driver.switch_to.window(driver.window_handles[1])
 
 
+def layer3_quest_17(driver):
+    driver.get(url_quest_17)
+
+    # #step 1
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(.1)
+    #
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(.1)
+
+    # #step 2
+    # #swap om l3
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    # click_element(selector)
+    # time.sleep(.5)
+    #
+    # #chng netw
+    # driver.switch_to.window(driver.window_handles[2])
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/div[1]/div[1]/section[1]/div/button/span/span'
+    # click_element(selector)
+    #
+    # #choose base
+    # selector = '//*[@id=":rt:"]/div/div[7]'
+    # click_element(selector)
+    #
+    # #swap from eth -> usdc
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/div[1]/div[1]/section[2]/div[1]/section/div[1]/div[1]/div/input'
+    # send_keys_to_element(selector, 0.001)
+    # time.sleep(2)
+    #
+    # #route
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/div[1]/section[2]/button'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # #stch to base
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/div/section/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(2)
+    #
+    # #swap
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/div/section/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # #to rabb
+    # driver.switch_to.window(driver.window_handles[3])
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    # click_element(selector)
+    # time.sleep(0.5)
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # driver.switch_to.window(driver.window_handles[2])
+    # time.sleep(.3)
+    # driver.close()
+    #
+    # #return to quest
+    # driver.switch_to.window(driver.window_handles[1])
+    # time.sleep(8)
+    #
+    # #verif
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    # click_element(selector)
+
+    #swtch to base
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    try_click_element_and_continue(selector)
+    #claim cube
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(1)
+
+    #to rabby
+    driver.switch_to.window(driver.window_handles[2])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+    time.sleep(.5)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(1)
+
+    driver.switch_to.window(driver.window_handles[1])
+
 def main():
     # генерация фейкового юзерагента
     useragent = UserAgent().getRandom
@@ -1151,7 +1244,8 @@ def main():
     # layer3_quest_35(driver)
     # layer3_quest_44(driver)
     # layer3_quest_58(driver)
-    layer3_quest_13_51(driver)
+    # layer3_quest_13_51(driver)
+    layer3_quest_17(driver)
 
 
 
