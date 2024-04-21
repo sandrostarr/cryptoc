@@ -304,9 +304,9 @@ def layer3_quest_15(driver):
     selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[3]/button'
     click_element(selector)
 
-    # TODO в выборе кошельков нет rabby, надо проверить
-    print('TODO в выборе кошельков нет rabby, надо проверить')
-    time.sleep(3000)
+    # click wallet
+    selector = '/html/body/div[2]/div/div/div[2]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/button'
+    click_element(selector)
 
     # при открытии окна кошелька нужна небольшая пауза перед переключением на другое окно, т.к. оно не сразу появляется
     time.sleep(2)
@@ -316,6 +316,8 @@ def layer3_quest_15(driver):
     # коннект в рабби
     selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
     click_element(selector)
+
+    time.sleep(2)
 
     # sign msg
     driver.switch_to.window(driver.window_handles[2])
@@ -328,6 +330,18 @@ def layer3_quest_15(driver):
 
     create_sign_sent_rabby(driver, 2)
 
+    time.sleep(2)
+
+    # click collect
+    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[4]/div[1]/button'
+    click_element(selector)
+
+    # click collect
+    selector = '//*[@id="para-document"]/div[1]/div/div/div[2]/header/div/div/div/aside/div[2]/div[2]/div/div/div/div[2]/div[1]/div/div[2]/div[3]/div/div[1]/div/button'
+    click_element(selector)
+
+    time.sleep(3)
+
     # закрыть окно парагарафа
     driver.close()
 
@@ -336,7 +350,7 @@ def layer3_quest_15(driver):
     driver.switch_to.window(driver.window_handles[1])
 
     # verif этап 2
-    selector = '//*[@id="radix-:ra:"]/div/div[3]/div/div/div/button[2]'
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
     click_element(selector)
 
     # switch network
@@ -355,6 +369,7 @@ def layer3_quest_15(driver):
 
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
     click_element(selector)
+
     # sent
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
     click_element(selector)
@@ -1332,7 +1347,7 @@ def main():
     layer3_connect_wallet_and_login(driver)
 
     # layer3_quest_1(driver)
-    # layer3_quest_15(driver)
+    layer3_quest_15(driver)
     # layer3_quest_66(driver)
     # layer3_quest_101(driver)
     # layer3_quest_34(driver)
