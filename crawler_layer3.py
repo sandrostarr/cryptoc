@@ -29,6 +29,7 @@ url_quest_51 = os.getenv('URL_QUEST_51')
 url_quest_17 = os.getenv('URL_QUEST_17')
 url_quest_28 = os.getenv('URL_QUEST_28')
 url_quest_29 = os.getenv('URL_QUEST_29')
+url_quest_64 = os.getenv('URL_QUEST_64')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -97,6 +98,27 @@ def create_sign_sent_rabby(driver: uc.Chrome, window_number_to_return: int | Non
         # поэтому надо вернуться на предыдущее окно сразу после нажатия на кнопку
         driver.switch_to.window(driver.window_handles[window_number_to_return])
         time.sleep(1)
+
+
+# создание и подписание транз в rabby (для вариации в fullscreen mode rabby)
+def create_sign_sent_rabby_full_window(driver: uc.Chrome, window_number_to_open: int, window_number_to_return: int):
+    time.sleep(4)
+
+    # переключение на окно rabby (номер окна передаётся в параметре window_number_to_open
+    driver.switch_to.window(driver.window_handles[window_number_to_open])
+
+    # rabby sign and create
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    # rabby sent
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    # после нажатия кнопки окно закрывается, selenium теряет фокус с окна и падает ошибка
+    # поэтому надо вернуться на предыдущее окно сразу после нажатия на кнопку
+    driver.switch_to.window(driver.window_handles[window_number_to_return])
+    time.sleep(1)
 
 
 # функция для логина в rabby wallet
@@ -1333,6 +1355,101 @@ def layer3_quest_29(driver):
     click_element(selector)
 
 
+def layer3_quest_64(driver):
+    driver.get(url_quest_64)
+
+    # TODO скрипт для запуска уже пройденных этапов с начала
+    selector = '/html/body/div[1]/div/div/div/div[3]/section[1]/div/div[2]/div[2]/div[1]'
+    click_element(selector)
+
+    # open jumper
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div/div/div/a/button'
+    click_element(selector)
+
+    time.sleep(2)
+    driver.switch_to.window(driver.window_handles[2])
+
+    # click get started
+    selector = '/html/body/div[2]/div/div/button'
+    click_element(selector)
+
+    # click connect wallet
+    selector = '//*[@id=":r2:"]'
+    click_element(selector)
+
+    # click rabby wallet
+    selector = '//*[@id="main-burger-menu"]/li[5]'
+    click_element(selector)
+
+    time.sleep(2)
+    driver.switch_to.window(driver.window_handles[3])
+
+    # rabby click connect
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    driver.switch_to.window(driver.window_handles[2])
+
+    # click change token
+    selector = '//*[@id="widget-scrollable-container-:r0:"]/div/div[2]/div/div[1]/button[2]'
+    click_element(selector)
+
+    # click usdc
+    selector = '//*[@id="widget-scrollable-container-:r0:"]/div/div[2]/div/div[2]/ul/li[2]'
+    click_element(selector)
+
+    # send 0.1 to toeken amount
+    selector = '//*[@id="widget-scrollable-container-:r0:"]/div/div[2]/div/div[2]/div/div/div[1]/input'
+    send_keys_to_element(selector, '0.1')
+
+    time.sleep(3)
+
+    # click review swap
+    selector = '/html/body/div[3]/div/div/div[1]/div/div/div[2]/div/div[3]/button[1]'
+    click_element(selector)
+
+    # click start swapping
+    selector = '/html/body/div[3]/div/div/div[1]/div/div/div[2]/div/div[2]/button'
+    click_element(selector)
+
+    # click start swapping
+    selector = '/html/body/div[3]/div/div/div[1]/div/div[2]/div[3]/div/div[6]/button[2]'
+    click_element(selector)
+
+    create_sign_sent_rabby_full_window(driver, 3, 2)
+
+    time.sleep(20)
+
+    # click done
+    selector = '/html/body/div[3]/div/div/div[1]/div/div[2]/div[3]/div/div[4]/button'
+    click_element(selector)
+
+    # close jumper windows
+    driver.close()
+
+    time.sleep(1)
+    # return to layer3
+    driver.switch_to.window(driver.window_handles[1])
+
+    # click verify
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button[2]'
+    click_element(selector)
+
+    # click switch to polygon
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    try_click_element_and_continue(selector)
+
+    # click mint cube to claim
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    create_sign_sent_rabby_full_window(driver, 2, 1)
+
+    # click continue
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/button'
+    click_element(selector)
+
+
 def main():
     # генерация фейкового юзерагента
     useragent = UserAgent().getRandom
@@ -1347,7 +1464,7 @@ def main():
     layer3_connect_wallet_and_login(driver)
 
     # layer3_quest_1(driver)
-    layer3_quest_15(driver)
+    # layer3_quest_15(driver)
     # layer3_quest_66(driver)
     # layer3_quest_101(driver)
     # layer3_quest_34(driver)
@@ -1358,6 +1475,7 @@ def main():
     # layer3_quest_17(driver)
     # layer3_quest_28(driver)
     # layer3_quest_29(driver)
+    # layer3_quest_64(driver)
 
     # # читаем cookies из файла
     # with open(cookies, 'rb') as f:
