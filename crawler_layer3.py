@@ -31,6 +31,9 @@ url_quest_28 = os.getenv('URL_QUEST_28')
 url_quest_29 = os.getenv('URL_QUEST_29')
 url_quest_64 = os.getenv('URL_QUEST_64')
 url_quest_20 = os.getenv('URL_QUEST_20')
+url_quest_19 = os.getenv('URL_QUEST_19')
+url_quest_47 = os.getenv('URL_QUEST_47')
+url_quest_49 = os.getenv('URL_QUEST_49')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -86,6 +89,7 @@ def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: in
 
 
 # создание и подписание транз в rabby
+#TODO переписать через TRY
 def create_sign_sent_rabby(driver: uc.Chrome, window_number_to_return: int | None = None):
     # rabby sign and create
     selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
@@ -112,6 +116,7 @@ def create_sign_sent_rabby_full_window(driver: uc.Chrome, window_number_to_open:
     # rabby sign and create
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
     click_element(selector)
+    time.sleep(3)
 
     # rabby sent
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
@@ -120,7 +125,7 @@ def create_sign_sent_rabby_full_window(driver: uc.Chrome, window_number_to_open:
     # после нажатия кнопки окно закрывается, selenium теряет фокус с окна и падает ошибка
     # поэтому надо вернуться на предыдущее окно сразу после нажатия на кнопку
     driver.switch_to.window(driver.window_handles[window_number_to_return])
-    time.sleep(1)
+    time.sleep(3)
 
 
 # функция для логина в rabby wallet
@@ -1622,6 +1627,154 @@ def layer3_quest_20(driver):
 
     driver.switch_to.window(driver.window_handles[1])
 
+
+def layer3_quest_19(driver):
+    #TODO нужен USDCb
+    driver.get(url_quest_19)
+    time.sleep(1)
+
+    # step 1
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div/div/div/a/button'
+    click_element(selector)
+
+    # stg
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(2)
+
+    # connect
+    selector = '//*[@id="__next"]/header[1]/div/div[3]/button[2]'
+    click_element(selector)
+
+    selector = '/html/body/div[2]/div[3]/div/div[2]/div/a[4]'
+    click_element(selector)
+
+    # on rabby
+    driver.switch_to.window(driver.window_handles[3])
+    time.sleep(1)
+
+    selector = '/html/body/div/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    # back stg
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(2)
+
+def layer3_quest_47(driver):
+    driver.get(url_quest_47)
+
+    # # step 1
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    # click_element(selector)
+
+    # step 2
+    # to compound
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+    time.sleep(1)
+
+    # on compaund
+    driver.switch_to.window(driver.window_handles[2])
+
+    # connect
+    selector = '//*[@id="root"]/header/div[1]/div/div[2]/div/div[2]/div/div'
+    click_element(selector)
+
+    # choose rabby
+    selector = '/html/body/div/div[2]/div[2]/div[4]/div[1]'
+    click_element(selector)
+
+    # on rabby
+    driver.switch_to.window(driver.window_handles[3])
+    time.sleep(2)
+
+    selector = '/html/body/div/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+    time.sleep(3)
+
+    # to comp
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(5)
+
+    #supp eth
+    #TODO не видит кнопу  supply
+    selector = '//*[@id="root"]/div[4]/div[1]/div[2]/div/button[1]/label'
+    # click_element(selector)
+
+    # # input value
+    # selector = '/html/body/div/div[4]/div[2]/div[2]/div[1]/div[2]/div/div[2]/input'
+    # send_keys_to_element(selector, '0.001')
+
+
+def layer3_quest_49(driver):
+    driver.get(url_quest_49)
+
+    # # step 1
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    # click_element(selector)
+
+    # step 2
+    # to seamless
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[2]/div/div/a/button'
+    click_element(selector)
+
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(5)
+
+    driver.get('https://legacy.seamlessprotocol.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_base_v3')
+    time.sleep(4)
+
+
+    # connect
+    selector = '//*[@id="wallet-button"]'
+    click_element(selector)
+
+    # rabby
+    selector = '/html/body/div[8]/div[3]/div[1]/button[1]'
+    click_element(selector)
+
+    # on rabby
+    driver.switch_to.window(driver.window_handles[3])
+    time.sleep(2)
+
+    selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    click_element(selector)
+
+    # back
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(10)
+
+    # info
+    selector = '//*[@id="__next"]/main/div[2]/div/div[1]/div/button[2]'
+    click_element(selector)
+
+
+    # eth
+    selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div[2]/div/div[1]/div/button[2]'
+    click_element(selector)
+
+    # supply
+    selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div[2]/div/div[3]/div[1]/div[2]/button'
+    click_element(selector)
+
+    # switch netw
+    selector = '/html/body/div[8]/div[3]/div[1]/div/p/button'
+    try_click_element_and_continue(selector)
+
+    # inp ETH value
+    selector = '/html/body/div[8]/div[3]/div[1]/div[2]/div[1]/div[1]/input'
+    send_keys_to_element(selector, '0.001')
+
+    # supp
+    selector = '/html/body/div[8]/div[3]/div[3]/button'
+    click_element(selector)
+
+    create_sign_sent_rabby_full_window(driver,3,2)
+
+
 def main():
     # генерация фейкового юзерагента
     useragent = UserAgent().getRandom
@@ -1648,7 +1801,13 @@ def main():
     # layer3_quest_58(driver)
     # layer3_quest_13_51(driver)
     # layer3_quest_17(driver)
-    layer3_quest_20(driver)
+    # layer3_quest_20(driver)
+    # layer3_quest_19(driver)
+    # layer3_quest_47(driver)
+    layer3_quest_49(driver)
+
+
+
 
     # polygon
     # layer3_quest_64(driver)
