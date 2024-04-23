@@ -1631,7 +1631,6 @@ def layer3_quest_20(driver):
 
 
 def layer3_quest_19(driver):
-    #TODO нужен USDCb
     driver.get(url_quest_19)
     time.sleep(1)
 
@@ -1661,13 +1660,99 @@ def layer3_quest_19(driver):
     driver.switch_to.window(driver.window_handles[2])
     time.sleep(2)
 
+    # max
+    selector = '//*[@id="__next"]/main/div[2]/section/div[2]/div[2]/div[2]/div/div[1]/div/div[2]/div/button'
+    click_element(selector)
+
+    # approve
+    selector = '//*[@id="__next"]/main/div[2]/section/div[2]/div[2]/div[2]/div/button'
+    click_element(selector)
+    time.sleep(2)
+
+    # on rabby
+    driver.switch_to.window(driver.window_handles[3])
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[4]/span[2]'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+
+    # supplay usdcb
+    time.sleep(10)
+
+    driver.switch_to.window(driver.window_handles[3])
+    time.sleep(1)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    click_element(selector)
+
+    selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button[1]'
+    click_element(selector)
+    time.sleep(10)
+
+    verif
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(1)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(3)
+
+    # removw liauidity
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(.3)
+
+    selector = '//*[@id="__next"]/main/div[2]/section/div[2]/div[2]/div[1]/h6[2]'
+    click_element(selector)
+
+    # max
+    selector = '//*[@id="__next"]/main/div[2]/section/div[2]/div[2]/div[2]/div/div[1]/div/div[2]/div/button'
+    click_element(selector)
+    time.sleep(4)
+
+    # withdraw
+    selector = '//*[@id="__next"]/main/div[2]/section/div[2]/div[2]/div[2]/div/button'
+    click_element(selector)
+    time.sleep(7)
+
+    # choose base
+    selector = '//*[@id="__next"]/main/div[2]/section/div[2]/div[2]/div/div[3]/div/div[1]/button'
+    click_element(selector)
+    time.sleep(2)
+
+    create_sign_sent_rabby_full_window(driver, 3,2)
+
+    driver.close()
+
+    # claeim
+    # back to l3
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(1)
+
+    # switch ntw
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    try_click_element_and_continue(selector)
+
+    # claim
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    # rabby
+    create_sign_sent_rabby_full_window(driver, 2, 1)
+    time.sleep(3)
+
+
 
 def layer3_quest_47(driver):
     driver.get(url_quest_47)
 
-    # # step 1
-    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
-    # click_element(selector)
+    # step 1
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
 
     # step 2
     # to compound
@@ -1842,7 +1927,7 @@ def layer3_quest_49(driver):
     time.sleep(3)
 
 
-def layer3_quest_50_40(driver):
+def layer3_quest_50(driver):
     driver.get(url_quest_50)
 
     # # step 1
@@ -1991,6 +2076,7 @@ def layer3_quest_50_40(driver):
 
 
 
+
 def main():
     # генерация фейкового юзерагента
     useragent = UserAgent().getRandom
@@ -2018,9 +2104,9 @@ def main():
     # layer3_quest_13_51(driver)
     # layer3_quest_17(driver)
     # layer3_quest_20(driver)
-    # layer3_quest_19(driver)
+    layer3_quest_19(driver)
     # layer3_quest_47(driver)
-    layer3_quest_50_40(driver)
+    # layer3_quest_50(driver)
 
 
     # polygon
