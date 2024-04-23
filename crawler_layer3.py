@@ -34,6 +34,8 @@ url_quest_20 = os.getenv('URL_QUEST_20')
 url_quest_19 = os.getenv('URL_QUEST_19')
 url_quest_47 = os.getenv('URL_QUEST_47')
 url_quest_49 = os.getenv('URL_QUEST_49')
+url_quest_50 = os.getenv('URL_QUEST_50')
+url_quest_40 = os.getenv('URL_QUEST_40')
 
 metamask_pw = os.getenv('METAMASK_PW')
 wait: ClassVar[WebDriverWait]
@@ -1490,7 +1492,6 @@ def layer3_quest_20(driver):
     click_element(selector)
     time.sleep(0.5)
 
-
     # back to aave
     driver.switch_to.window(driver.window_handles[2])
     time.sleep(1)
@@ -1508,7 +1509,8 @@ def layer3_quest_20(driver):
     selector = '//*[@id="rcc-decline-button"]'
     click_element(selector)
 
-    driver.get('https://app.aave.com/reserve-overview/?underlyingAsset=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&marketName=proto_base_v3')
+    driver.get(
+        'https://app.aave.com/reserve-overview/?underlyingAsset=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&marketName=proto_base_v3')
     time.sleep(2)
 
     # usdc supply
@@ -1659,6 +1661,7 @@ def layer3_quest_19(driver):
     driver.switch_to.window(driver.window_handles[2])
     time.sleep(2)
 
+
 def layer3_quest_47(driver):
     driver.get(url_quest_47)
 
@@ -1724,9 +1727,9 @@ def layer3_quest_49(driver):
     driver.switch_to.window(driver.window_handles[2])
     time.sleep(5)
 
-    driver.get('https://legacy.seamlessprotocol.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_base_v3')
+    driver.get(
+        'https://legacy.seamlessprotocol.com/reserve-overview/?underlyingAsset=0x4200000000000000000000000000000000000006&marketName=proto_base_v3')
     time.sleep(4)
-
 
     # connect
     selector = '//*[@id="wallet-button"]'
@@ -1751,7 +1754,6 @@ def layer3_quest_49(driver):
     selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div[2]/div/div[1]/div/button[2]'
     click_element(selector)
 
-
     # supply
     selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div[2]/div/div[3]/div[1]/div[2]/button'
     click_element(selector)
@@ -1768,7 +1770,7 @@ def layer3_quest_49(driver):
     selector = '/html/body/div[8]/div[3]/div[3]/button'
     click_element(selector)
 
-    create_sign_sent_rabby_full_window(driver,3,2)
+    create_sign_sent_rabby_full_window(driver, 3, 2)
 
     # verif
     driver.switch_to.window(driver.window_handles[1])
@@ -1793,7 +1795,7 @@ def layer3_quest_49(driver):
     click_element(selector)
     time.sleep(.5)
 
-    #switch network
+    # switch network
     selector = '/html/body/div[7]/div[3]/div[1]/div/p/button'
     try_click_element_and_continue(selector)
 
@@ -1807,8 +1809,7 @@ def layer3_quest_49(driver):
     click_element(selector)
     time.sleep(2)
 
-
-    create_sign_sent_rabby_full_window(driver,3,2)
+    create_sign_sent_rabby_full_window(driver, 3, 2)
 
     # withdraw
     selector = '/html/body/div[7]/div[3]/div[4]/button[2]'
@@ -1820,7 +1821,7 @@ def layer3_quest_49(driver):
     try_click_element_and_continue(selector)
     time.sleep(2)
 
-    create_sign_sent_rabby_full_window(driver, 3,2)
+    create_sign_sent_rabby_full_window(driver, 3, 2)
     time.sleep(5)
     driver.close()
 
@@ -1837,8 +1838,157 @@ def layer3_quest_49(driver):
     click_element(selector)
 
     # rabby
-    create_sign_sent_rabby_full_window(driver,2,1)
+    create_sign_sent_rabby_full_window(driver, 2, 1)
     time.sleep(3)
+
+
+def layer3_quest_50_40(driver):
+    driver.get(url_quest_50)
+
+    # # step 1
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    # click_element(selector)
+    #
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    # click_element(selector)
+
+    # step 2 check
+    # TODO не прожал кнопку теперь не могу проверить оставить на потом для дебага
+    # time.sleep(5)
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    # click_element(selector)
+
+    # # step 3 to uni
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[1]/div[3]/div/div/a/button'
+    # click_element(selector)
+    # time.sleep(2)
+    #
+    # driver.switch_to.window(driver.window_handles[2])
+    # time.sleep(1)
+    #
+    # # connect uni
+    # selector = '//*[@id="root"]/span/span/div[1]/nav/div/div[3]/div/div[3]/div/button'
+    # click_element(selector)
+    #
+    # # choose rabby
+    # selector = '//*[@id="wallet-dropdown-scroll-wrapper"]/div/div/div[2]/div[1]/div/div[2]/button'
+    # click_element(selector)
+    #
+    # # connect rabby
+    # driver.switch_to.window(driver.window_handles[3])
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="root"]/div/div/div/div/div[3]/div/div/button[1]'
+    # click_element(selector)
+    #
+    # driver.switch_to.window(driver.window_handles[2])
+    #
+    # # change to base
+    # selector = '//*[@id="root"]/span/span/div[1]/nav/div/div[3]/div/div[2]/div/div[1]/div/button'
+    # click_element(selector)
+    #
+    # selector = '//*[@id="root"]/span/span/div[1]/nav/div/div[3]/div/div[2]/div/div[2]/button[5]'
+    # click_element(selector)
+    #
+    # # USDC -> USDCb
+    # selector = '//*[@id="swap-currency-input"]/div/div[1]/div[2]/div/button'
+    # click_element(selector)
+    #
+    # selector = '//*[@id="token-search-input"]'
+    # send_keys_to_element(selector, 'USDC')
+    # time.sleep(3)
+    #
+    # # USDc
+    # selector = '/html/body/reach-portal[7]/div[2]/div/div/div/div/div[3]/div/div/div/div/div[2]'
+    # click_element(selector)
+    #
+    #
+    # # 2 choose
+    # selector = '//*[@id="swap-currency-output"]/div/div[1]/div[2]/div/button'
+    # click_element(selector)
+    #
+    # selector = '//*[@id="token-search-input"]'
+    # send_keys_to_element(selector, 'USDC')
+    # time.sleep(3)
+    #
+    # # USDCb
+    # selector = '/html/body/reach-portal[7]/div[2]/div/div/div/div/div[3]/div/div/div/div/div[3]'
+    # click_element(selector)
+    #
+    # # max
+    # selector = '//*[@id="swap-currency-input"]/div/div[2]/div/div[2]/button'
+    # click_element(selector)
+    # time.sleep(4)
+    #
+    # # swap
+    # selector = '//*[@id="swap-button"]'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # # approve and swap
+    # selector = '//*[@id="confirm-swap-or-send"]'
+    # click_element(selector)
+
+    # # ignore all
+    # driver.switch_to.window(driver.window_handles[3])
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[4]/span[2]'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # create_sign_sent_rabby_full_window(driver,3,2)
+
+    # # swap on rabby
+    # driver.switch_to.window(driver.window_handles[3])
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="root"]/div/footer/div/section/div[4]/span[2]'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # selector = '//*[@id="root"]/div/footer/div/section/div[3]/div/button[1]'
+    # click_element(selector)
+    # time.sleep(3)
+    #
+    # driver.switch_to.window(driver.window_handles[3])
+    #
+    # selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
+    # click_element(selector)
+    # time.sleep(1)
+    #
+    # selector = '/html/body/div/div/div[2]/section/div[3]/div/button[1]'
+    # click_element(selector)
+    # time.sleep(2)
+    #
+    # driver.switch_to.window(driver.window_handles[2])
+    # driver.close()
+    #
+    # driver.switch_to.window(driver.window_handles[1])
+    # time.sleep(1)
+
+    # # verif
+    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    # click_element(selector)
+
+    # claim
+    # switch
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    try_click_element_and_continue(selector)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(1)
+
+    create_sign_sent_rabby_full_window(driver,2,1)
+    time.sleep(5)
+    
+
+
 
 
 def main():
@@ -1870,9 +2020,7 @@ def main():
     # layer3_quest_20(driver)
     # layer3_quest_19(driver)
     # layer3_quest_47(driver)
-    layer3_quest_49(driver)
-
-
+    layer3_quest_50_40(driver)
 
 
     # polygon
