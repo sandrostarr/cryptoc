@@ -1708,13 +1708,13 @@ def layer3_quest_47(driver):
 def layer3_quest_49(driver):
     driver.get(url_quest_49)
 
-    # # step 1
-    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
-    # click_element(selector)
-    # time.sleep(1)
-    #
-    # selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
-    # click_element(selector)
+    # step 1
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[3]/div/div/div/button'
+    click_element(selector)
+    time.sleep(1)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button'
+    click_element(selector)
 
     # step 2
     # to seamless
@@ -1747,14 +1747,10 @@ def layer3_quest_49(driver):
     driver.switch_to.window(driver.window_handles[2])
     time.sleep(10)
 
-    # info
-    selector = '//*[@id="__next"]/main/div[2]/div/div[1]/div/button[2]'
-    click_element(selector)
-
-
-    # eth
+    # ETH
     selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div[2]/div/div[1]/div/button[2]'
     click_element(selector)
+
 
     # supply
     selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div[2]/div/div[3]/div[1]/div[2]/button'
@@ -1773,6 +1769,76 @@ def layer3_quest_49(driver):
     click_element(selector)
 
     create_sign_sent_rabby_full_window(driver,3,2)
+
+    # verif
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(5)
+
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+    time.sleep(3)
+
+    # wtihdraw from seal
+    driver.switch_to.window(driver.window_handles[2])
+    time.sleep(1)
+
+    # ok
+    selector = '/html/body/div[8]/div[3]/div[2]/button'
+    try_click_element_and_continue(selector)
+
+    driver.get('https://legacy.seamlessprotocol.com/')
+    time.sleep(3)
+
+    selector = '//*[@id="__next"]/main/div[2]/div/div[2]/div/div[1]/div[1]/div[3]/div[2]/div[5]/button[1]'
+    click_element(selector)
+    time.sleep(.5)
+
+    #switch network
+    selector = '/html/body/div[7]/div[3]/div[1]/div/p/button'
+    try_click_element_and_continue(selector)
+
+    # max
+    selector = '/html/body/div[7]/div[3]/div[1]/div[2]/div[2]/button'
+    click_element(selector)
+    time.sleep(5)
+
+    # approve
+    selector = '/html/body/div[7]/div[3]/div[4]/button[1]'
+    click_element(selector)
+    time.sleep(2)
+
+
+    create_sign_sent_rabby_full_window(driver,3,2)
+
+    # withdraw
+    selector = '/html/body/div[7]/div[3]/div[4]/button[2]'
+    try_click_element_and_continue(selector)
+    time.sleep(2)
+
+    # withdraw 1
+    selector = '/html/body/div[7]/div[3]/div[4]/button'
+    try_click_element_and_continue(selector)
+    time.sleep(2)
+
+    create_sign_sent_rabby_full_window(driver, 3,2)
+    time.sleep(5)
+    driver.close()
+
+    # back to l3
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(1)
+
+    # switch ntw
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/div/button'
+    try_click_element_and_continue(selector)
+
+    # claim
+    selector = '//*[@id="__next"]/div/div/div/div[3]/section[2]/div/div[2]/div/div/div/button[2]'
+    click_element(selector)
+
+    # rabby
+    create_sign_sent_rabby_full_window(driver,2,1)
+    time.sleep(3)
 
 
 def main():
