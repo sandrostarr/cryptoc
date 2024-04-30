@@ -150,7 +150,6 @@ def rabby_wallet_login(driver):
     # TODO надо использовать через url расширения и убрать клики
     # open extensions
     ext_location = pyautogui.locateOnScreen('IMG/extense.png')
-    print(ext_location)
     ext_locationX = ext_location.left / 2 + ext_location.width / 4
     ext_locationY = ext_location.top / 2 + ext_location.height / 4
     pyautogui.moveTo(ext_locationX, ext_locationY)
@@ -160,7 +159,6 @@ def rabby_wallet_login(driver):
 
     # click rabby
     rabby_location = pyautogui.locateOnScreen('IMG/rabbi_wall.png')
-    print(ext_location)
     rabby_locationX = rabby_location.left / 2 + rabby_location.width / 4
     rabby_locationY = rabby_location.top / 2 + rabby_location.height / 4
     pyautogui.moveTo(rabby_locationX, rabby_locationY)
@@ -255,7 +253,6 @@ def check_wallet_balance(chain_rpc):
 
 
 def max_balance():
-    print('Определяю балансы для старта маршрута')
     arb_balance = check_wallet_balance(rpc_chain["arbitrum"])
     op_balance = check_wallet_balance(rpc_chain["op"])
     linea_balance = check_wallet_balance(rpc_chain["linea"])
@@ -266,28 +263,21 @@ def max_balance():
     max_balance = max(arb_balance, op_balance, linea_balance, base_balance, polygon_balance, bnb_balance)
 
     if max_balance == arb_balance:
-        print('arb')
         return "arbitrum"
     elif max_balance == op_balance:
-        print('op')
         return "op"
     elif max_balance == linea_balance:
-        print('linea')
         return "linea"
     elif max_balance == base_balance:
-        print('base')
         return "base"
     elif max_balance == polygon_balance:
-        print('polygon')
         return "polygon"
     elif max_balance == bnb_balance:
-        print('bnb')
         return "bnb"
-    print('сеть выбрана откуда')
+
 
 
 def deBridge_choose_to_chain(fromChain):
-    print('суть куда начало выбора')
     if fromChain == "linea":
         db_ch = list(deBridge_chains_fromLinea)
     else:
@@ -298,8 +288,6 @@ def deBridge_choose_to_chain(fromChain):
     random_chain = random.choice(db_ch)
 
     return random_chain
-
-    print('сеть выбрана')
 
 
 def deBridge_choose_roters(fromChain, toChain, count_swaps):
@@ -314,28 +302,18 @@ def deBridge_choose_roters(fromChain, toChain, count_swaps):
         to_Chain = deBridge_chains[toChain]
 
     time.sleep(5)
-    print('выбор кужа')
+
     # select btn
     selector = '//*[@id="dln-form-container"]/div[2]/div[1]/div/div[2]/div[2]'
     click_element(selector)
     time.sleep(7)
 
-    print(from_Chain)
 
-    # if count_swaps > 0:
-    #     time.sleep(3000)
-
-    # selector = '//*[@id="dln-form-container"]/div[2]/div[3]/div[2]/div[2]'
-    # try_click_element_and_continue(selector)
-    # time.sleep(1)
-
-    print('нажимаю сеть 1')
     # select network
     click_element(from_Chain)
     time.sleep(3)
 
 
-    print('нажимаю сеть 2')
     ETH = '//*[@id="dln-form-container"]/app-select-token/div/div[4]/div/cdk-virtual-scroll-viewport/div[1]/div[1]'
     try_click_element_and_continue(ETH)
     time.sleep(2)
@@ -412,6 +390,12 @@ def debridge_confirm_trade(driver):
     try_click_element_and_continue(selector)
     time.sleep(2)
 
+    try:
+        driver.switch_to.window(driver.window_handles[2])
+    except:
+        pass
+    time.sleep(2)
+
     selector = '//*[@id="root"]/div/div[2]/section/div[3]/div/button'
     click_element(selector)
 
@@ -431,18 +415,17 @@ def debridge_transfers(driver):
 
 
     while max_swaps > count_swaps:
-        print('Номер обмена: ', count_swaps)
-        print('Выбраю сеть откуда - ', count_swaps)
+        print('Номер свапа: ', count_swaps + 1)
         fromChain = max_balance()
-        print('Сет куда - ', count_swaps)
+
         toChain = deBridge_choose_to_chain(fromChain)
-        print('строим маршрут и выбираем сети - ', count_swaps)
+
         deBridge_choose_roters(fromChain, toChain, count_swaps)
-        print('подписываем транзу - ', count_swaps)
+
         debridge_confirm_trade(driver)
         count_swaps = count_swaps + 1
 
-
+    print('DONE')
 
 def main():
     # генерация фейкового юзерагента
