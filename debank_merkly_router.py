@@ -145,27 +145,8 @@ def create_sign_sent_rabby_full_window(driver: uc.Chrome, window_number_to_open:
 
 # функция для логина в rabby wallet
 def rabby_wallet_login(driver):
-    time.sleep(5)
-    # клики на расширениях для использования
-    # TODO надо использовать через url расширения и убрать клики
-    # open extensions
-    ext_location = pyautogui.locateOnScreen('IMG/extense.png')
-    ext_locationX = ext_location.left / 2 + ext_location.width / 4
-    ext_locationY = ext_location.top / 2 + ext_location.height / 4
-    pyautogui.moveTo(ext_locationX, ext_locationY)
-    pyautogui.click(button='left')
-
-    time.sleep(0.1)
-
-    # click rabby
-    rabby_location = pyautogui.locateOnScreen('IMG/rabbi_wall.png')
-    rabby_locationX = rabby_location.left / 2 + rabby_location.width / 4
-    rabby_locationY = rabby_location.top / 2 + rabby_location.height / 4
-    pyautogui.moveTo(rabby_locationX, rabby_locationY)
-    pyautogui.click(button='left')
-
-    # переключение на rabby
-    driver.switch_to.window(driver.window_handles[2])
+    # open extension create password page
+    driver.get("chrome-extension://bmlecppfilmmceljceknlcemkbfikmhe/index.html")
 
     # click next
     selector = '//*[@id="root"]/div/section/footer/button'
@@ -195,52 +176,9 @@ def rabby_wallet_login(driver):
     selector = '//*[@id="key"]'
     send_keys_to_element(selector, os.getenv('PRIVATE_KEY'))
 
-    # click next button
-    selector = '//*[@id="root"]/div/div/div/div/div/form/div[3]/div/button'
-    try_click_element_and_continue(selector)
-
-    # click done button
-    selector = '//*[@id="root"]/div/div/div/div/div/form/div[2]/div/button'
-    try_click_element_and_continue(selector)
-
-    # click done button
-    selector = '/html/body/div[2]/div/div[2]/div/div[2]/button'
-    try_click_element_and_continue(selector)
-
-    driver.switch_to.window(driver.window_handles[1])
-
-    time.sleep(1)
-
-    # это настройка расширения rabby без клика по экрану. В undetected_chromedriver почему-то не работает
-    # TODO пофиксить и использовать вместо кликов
-    # # open extension create password page
-    # driver.get("chrome-extension://acmacodkjbdgmoleebolmdjonilkdbch/index.html#/password")
-    #
-    # time.sleep(1)
-    # driver.refresh()
-    #
-    # # create pass
-    # selector = '//*[@id="password"]'
-    # send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
-    #
-    # # confirm pass
-    # selector = '//*[@id="confirmPassword"]'
-    # send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
-    #
-    # # click next button
-    # selector = '//*[@id="root"]/div/div/div/form/div[3]/button'
-    # click_element(selector)
-    #
-    # # open extension import key page
-    # driver.get("chrome-extension://acmacodkjbdgmoleebolmdjonilkdbch/index.html#/import/key")
-    #
-    # # send private key
-    # selector = '//*[@id="key"]'
-    # send_keys_to_element(selector, os.getenv('PRIVATE_KEY'))
-    #
-    # # click next button
-    # selector = '//*[@id="root"]/div/form/div[3]/div/button'
-    # try_click_element_and_continue(selector)
+    # click confirm button
+    selector = '//*[@id="root"]/div/form/div[3]/div/button'
+    click_element(selector)
 
 
 def check_wallet_balance(chain_rpc):
