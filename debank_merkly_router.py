@@ -29,20 +29,20 @@ wait: ClassVar[WebDriverWait]
 cookies = 'cookies.dat'
 
 deBridge_chains = {
-    "arbitrum": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[4]',
-    "linea": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[7]',
-    "op": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[8]',
-    "base": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[9]',
-    "polygon": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[3]',
-    "bnb": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[2]'
+    "arbitrum": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[4]',
+    "linea": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[7]',
+    "op": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[8]',
+    "base": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[9]',
+    # "polygon": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[3]',
+    "bnb": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[2]'
 }
 
 deBridge_chains_fromLinea = {
-    "arbitrum": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[4]',
-    "op": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[7]',
-    "base": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[8]',
-    "polygon": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[3]',
-    "bnb": '//*[@id="dln-form-container"]/app-select-token/div/div[2]/app-networks-list/div/div/div[2]'
+    "arbitrum": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[4]',
+    "op": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[7]',
+    "base": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[8]',
+    # "polygon": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[3]',
+    "bnb": '//*[@id="dln-form-container"]/div/app-select-token/div/div[2]/app-networks-list/div/div/div[2]'
 }
 
 rpc_chain = {
@@ -50,7 +50,7 @@ rpc_chain = {
     "linea": 'https://linea.drpc.org',
     "op": 'https://optimism.llamarpc.com',
     "base": 'https://1rpc.io/base',
-    "polygon": 'https://1rpc.io/matic',
+    # "polygon": 'https://1rpc.io/matic',
     "bnb": 'https://1rpc.io/bnb'
 
 }
@@ -257,10 +257,10 @@ def max_balance():
     op_balance = check_wallet_balance(rpc_chain["op"])
     linea_balance = check_wallet_balance(rpc_chain["linea"])
     base_balance = check_wallet_balance(rpc_chain["base"])
-    polygon_balance = int(check_wallet_balance(rpc_chain["polygon"])) / 3000
+    # polygon_balance = int(check_wallet_balance(rpc_chain["polygon"])) / 3000
     bnb_balance = int(check_wallet_balance(rpc_chain["bnb"])) * 0.19
 
-    max_balance = max(arb_balance, op_balance, linea_balance, base_balance, polygon_balance, bnb_balance)
+    max_balance = max(arb_balance, op_balance, linea_balance, base_balance, bnb_balance)
 
     if max_balance == arb_balance:
         return "arbitrum"
@@ -270,11 +270,10 @@ def max_balance():
         return "linea"
     elif max_balance == base_balance:
         return "base"
-    elif max_balance == polygon_balance:
-        return "polygon"
     elif max_balance == bnb_balance:
         return "bnb"
-
+    # elif max_balance == polygon_balance:
+    #     return "polygon"
 
 
 def deBridge_choose_to_chain(fromChain):
@@ -290,9 +289,8 @@ def deBridge_choose_to_chain(fromChain):
     return random_chain
 
 
-def deBridge_choose_roters(fromChain, toChain, count_swaps):
+def deBridge_choose_roters(fromChain, toChain):
     rpc_chain_link = rpc_chain[fromChain]
-
 
     from_Chain = deBridge_chains[fromChain]
 
@@ -304,22 +302,20 @@ def deBridge_choose_roters(fromChain, toChain, count_swaps):
     time.sleep(5)
 
     # select btn
-    selector = '//*[@id="dln-form-container"]/div[2]/div[1]/div/div[2]/div[2]'
+    selector = '//*[@id="dln-form-container"]/div/div[2]/div[1]/div/div[2]/div[2]'
     click_element(selector)
     time.sleep(7)
-
 
     # select network
     click_element(from_Chain)
     time.sleep(3)
 
-
-    ETH = '//*[@id="dln-form-container"]/app-select-token/div/div[4]/div/cdk-virtual-scroll-viewport/div[1]/div[1]'
+    ETH = '//*[@id="dln-form-container"]/div/app-select-token/div/div[4]/div/cdk-virtual-scroll-viewport/div[1]/div[1]'
     try_click_element_and_continue(ETH)
     time.sleep(2)
 
     # select where
-    selector = '//*[@id="dln-form-container"]/div[2]/div[3]/div[2]/div[2]'
+    selector = '//*[@id="dln-form-container"]/div/div[2]/div[3]/div[2]/div[2]'
     click_element(selector)
     time.sleep(5)
 
@@ -332,25 +328,22 @@ def deBridge_choose_roters(fromChain, toChain, count_swaps):
     # input value
     balance = check_wallet_balance(rpc_chain_link) * 0.85
     amount = balance / 10 ** 18
-    selector = '//*[@id="dln-form-container"]/div[2]/div[1]/div/div[2]/div[1]/input'
+    selector = '//*[@id="dln-form-container"]/div/div[2]/div[1]/div/div[2]/div[1]/input'
     send_keys_to_element(selector, str(amount))
     time.sleep(4)
 
 
 def deBridge_connector(driver):
     driver.get('https://app.debridge.finance/r/4503')
-    time.sleep(7)
+    time.sleep(10)
 
     # connect to app
-    selector = '//*[@id="dln-form-container"]/div[3]/div/button'
+    selector = '//*[@id="dln-form-container"]/div/div[3]/div/button'
     click_element(selector)
+    time.sleep(1)
 
-    # switcher
-    selector = '//*[@id="mat-mdc-slide-toggle-3-button"]'
-    click_element(selector)
-
-    # browser wallet
-    selector = '//*[@id="mat-mdc-dialog-0"]/div/div/dlg-unlock-wallet/div[2]/div/div[2]/div[2]/div[2]/button[1]'
+    # rabby wallet
+    selector = '//*[@id="mat-mdc-dialog-0"]/div/div/dlg-unlock-wallet/div[2]/div[1]/button[9]'
     click_element(selector)
 
     # switch to rabby
@@ -367,9 +360,9 @@ def deBridge_connector(driver):
 def debridge_confirm_trade(driver):
     time.sleep(3)
     # confirm trade
-    selector = '//*[@id="dln-form-container"]/div[3]/div/button'
+    selector = '//*[@id="dln-form-container"]/div/div[3]/div/button'
     click_element(selector)
-    time.sleep(1)
+    time.sleep(3)
 
     # terms
     selector = '//*[@id="mat-mdc-dialog-1"]/div/div/app-dlg-terms-conditions-agreement/div[3]/button'
@@ -403,16 +396,15 @@ def debridge_confirm_trade(driver):
     click_element(selector)
 
     driver.switch_to.window(driver.window_handles[1])
-    time.sleep(15)
-
+    time.sleep(30)
 
 
 # работа с площадкой
 def debridge_transfers(driver):
     deBridge_connector(driver)
     count_swaps = 0
-    max_swaps = random.randint(8, 15)
-
+    max_swaps = random.randint(7, 11)
+    print(max_swaps)
 
     while max_swaps > count_swaps:
         print('Номер свапа: ', count_swaps + 1)
@@ -420,12 +412,13 @@ def debridge_transfers(driver):
 
         toChain = deBridge_choose_to_chain(fromChain)
 
-        deBridge_choose_roters(fromChain, toChain, count_swaps)
+        deBridge_choose_roters(fromChain, toChain)
 
         debridge_confirm_trade(driver)
         count_swaps = count_swaps + 1
 
     print('DONE')
+
 
 def main():
     # генерация фейкового юзерагента
