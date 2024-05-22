@@ -1,18 +1,18 @@
 import os
 import time
-import pickle
-import pyautogui
 import undetected_chromedriver as uc
 
-from typing import ClassVar
 from dotenv import load_dotenv
 from selenium import webdriver
 from fake_useragent import UserAgent
-from selenium.webdriver.common.by import By
-from selenium.common import TimeoutException
 from lib.proxy import get_plugin_file as plugin_file
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
+
+from lib.rabby_connector import rabby_wallet_login
+
+from lib.form_functions import click_element
+from lib.form_functions import send_keys_to_element
+from lib.form_functions import try_click_element_and_continue
 
 load_dotenv()
 
@@ -38,7 +38,6 @@ url_quest_50 = os.getenv('URL_QUEST_50')
 url_quest_41 = os.getenv('URL_QUEST_41')
 
 metamask_pw = os.getenv('METAMASK_PW')
-wait: ClassVar[WebDriverWait]
 
 cookies = 'cookies.dat'
 
@@ -62,32 +61,6 @@ def get_chromedriver(use_proxy=False, user_agent=None):
     # undetected_chromedriver (для того, чтобы cloudflare не палил нас)
     driver = uc.Chrome(options=options)
     return driver
-
-
-def click_element(element_selector: str, extra_sleep: int = 0):
-    if extra_sleep > 0:
-        time.sleep(extra_sleep)
-
-    element = wait.until(ec.presence_of_element_located((By.XPATH, element_selector)))
-    time.sleep(1)
-    element.click()
-    time.sleep(0.5)
-
-
-# функция для клика на элементы, которых может не быть на странице и которые можно пропустить и не падать в фатал
-def try_click_element_and_continue(element_selector: str, extra_sleep: int = 0):
-    try:
-        click_element(element_selector, extra_sleep)
-    except TimeoutException:
-        pass
-
-
-def send_keys_to_element(element_selector: str, input_text: str, extra_sleep: int = 0):
-    if extra_sleep > 0:
-        time.sleep(extra_sleep)
-
-    element = wait.until(ec.presence_of_element_located((By.XPATH, element_selector)))
-    element.send_keys(input_text)
 
 
 # создание и подписание транз в rabby
@@ -128,44 +101,6 @@ def create_sign_sent_rabby_full_window(driver: uc.Chrome, window_number_to_open:
     # поэтому надо вернуться на предыдущее окно сразу после нажатия на кнопку
     driver.switch_to.window(driver.window_handles[window_number_to_return])
     time.sleep(3)
-
-
-# функция для логина в rabby wallet
-def rabby_wallet_login(driver):
-    # open extension create password page
-    driver.get("chrome-extension://bmlecppfilmmceljceknlcemkbfikmhe/index.html")
-
-    # click next
-    selector = '//*[@id="root"]/div/section/footer/button'
-    click_element(selector)
-
-    # click get ready
-    selector = '//*[@id="root"]/div/section/footer/a/button'
-    click_element(selector)
-
-    # import private key
-    selector = '//*[@id="root"]/div/div[3]/div[2]/div[2]'
-    click_element(selector)
-
-    # create pass
-    selector = '//*[@id="password"]'
-    send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
-
-    # confirm pass
-    selector = '//*[@id="confirmPassword"]'
-    send_keys_to_element(selector, os.getenv('WALLET_PASSWORD'))
-
-    # click next button
-    selector = '//*[@id="root"]/div/div/div/form/div[3]/button'
-    click_element(selector)
-
-    # send private key
-    selector = '//*[@id="key"]'
-    send_keys_to_element(selector, os.getenv('PRIVATE_KEY'))
-
-    # click confirm button
-    selector = '//*[@id="root"]/div/form/div[3]/div/button'
-    click_element(selector)
 
 
 # функция для выполнения первого квеста в layer3
@@ -2012,10 +1947,9 @@ def main():
     driver = get_chromedriver(use_proxy=False, user_agent=None)
 
     # явное ожидание поиска элементов
-    global wait
     wait = WebDriverWait(driver, timeout=5)
 
-    rabby_wallet_login(driver)
+    rabby_wallet_login(driver, wait)
 
     layer3_connect_wallet_and_login(driver)
 
